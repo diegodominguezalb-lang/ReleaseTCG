@@ -16,6 +16,7 @@ type Mode = "login" | "signup"
 export default function EmailPassword({ user }: EmailPasswordProps) {
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
   const supabase = createClient();
@@ -53,7 +54,7 @@ export default function EmailPassword({ user }: EmailPasswordProps) {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/welcome`,
+          emailRedirectTo: `${window.location.origin}/`,
         }
       });
       if (error) {
@@ -70,7 +71,7 @@ export default function EmailPassword({ user }: EmailPasswordProps) {
         setStatus(error.message);
       } else {
         setStatus("Signed in successfully");
-        router.push("/");
+        router.push("/dashboard");
       }
     }
   }
@@ -129,6 +130,17 @@ export default function EmailPassword({ user }: EmailPasswordProps) {
                   required
                   className="mt-2 w-full rounded-2xl border border-white/70 bg-[#1c1b1c] px-3 py-2.5 text-base text-white placeholder-slate-500 shadow-inner shadow-black/30 focus:border-white-400 focus:outline-none focus:ring-2 focus:ring-white-400/30"
                   placeholder="you@email.com"
+                />
+              </label>
+              <label className="block text-sm font-medium text-slate-200">
+                Username
+                <input
+                  type="username"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  required
+                  className="mt-2 w-full rounded-2xl border border-white/70 bg-[#1c1b1c] px-3 py-2.5 text-base text-white placeholder-slate-500 shadow-inner shadow-black/30 focus:border-white-400 focus:outline-none focus:ring-2 focus:ring-white-400/30"
+                  placeholder="realGamer123"
                 />
               </label>
               <label className="block text-sm font-medium text-slate-200">
