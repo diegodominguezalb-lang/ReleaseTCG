@@ -1,7 +1,10 @@
-import { requireUser } from "@/utils/supabase/requireUser";
+import { createServer } from "@/utils/supabase/server";
 
-export default async function Page() {
-  const { user, supabase } = await requireUser();
+export default async function Dashboard() {
+  const supabase = createServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return <p>Dashboard for {user.email}</p>;
+  return <pre>{JSON.stringify(user, null, 2)}</pre>;
 }
