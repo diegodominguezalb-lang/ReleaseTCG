@@ -1,10 +1,15 @@
-import { createServer } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/server";
+import { Box } from "./components/box";
+import { EditProfileButton } from "./components/editProfileButton";
 
-export default async function Dashboard() {
-  const supabase = createServer();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default async function Page() {
 
-  return <pre>{JSON.stringify(user, null, 2)}</pre>;
+  return (
+    <>
+      <Box>
+        <p>Dashboard for </p>
+        <EditProfileButton />
+      </Box>
+    </>
+  );
 }
