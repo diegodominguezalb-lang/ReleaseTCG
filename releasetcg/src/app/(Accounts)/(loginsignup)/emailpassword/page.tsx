@@ -1,3 +1,4 @@
+import { redirect } from "next/dist/client/components/navigation";
 import EmailPassword from "../components/emailpassword";
 import { createClient } from "@/utils/supabase/server";
 
@@ -8,6 +9,11 @@ export default async function EmailPasswordPage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    console.log({ user });
-    return <EmailPassword user={user}/>;
+    if (!user) {
+      return <EmailPassword user={user}/>;
+    }
+    else {
+      redirect("/dashboard");
+    }
+    
 }
