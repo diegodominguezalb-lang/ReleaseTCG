@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { createClient } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export function EditProfileButton() {
-  const supabase = createClient()
+  const router = useRouter();
 
   return (
-    <Button onClick={() => supabase.auth.signOut()}>
+    <Button onClick={() => router.push("/dashboard/edit")}>
       Edit Profile
     </Button>
-  )
+  );
 }
