@@ -23,9 +23,13 @@ export default async function Page() {
     return (
       <>
         <Box>
-          <p>Dashboard for {profile?.username ?? user.email}</p>
-          <p>Winrate: {profile?.winrate ?? 0}%</p>
-          <EditProfileButton />
+          <div className="relative">
+            <EditProfileButton profile={profile} />
+
+            <p className="text-3xl font-bold">{profile?.username ?? user.email}</p>
+            <p>{profile?.bio ?? "No bio available."}</p>
+            <p>Winrate: {profile?.wins ?? 0 / (profile?.losses ?? 1) * 100}%</p>
+          </div>
         </Box>
       </>
     );

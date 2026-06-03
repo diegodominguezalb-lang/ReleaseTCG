@@ -1,14 +1,28 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { EditProfileModal } from "./editProfileModal";
 
-export function EditProfileButton() {
-  const router = useRouter();
+export function EditProfileButton({
+  profile,
+}: {
+  profile: any;
+}) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <Button onClick={() => router.push("/dashboard/edit")}>
-      Edit Profile
-    </Button>
+    <>
+      <Button className="absolute top-0 right-0" onClick={() => setOpen(true)}>
+        Edit Profile
+      </Button>
+
+      {open && (
+        <EditProfileModal
+          profile={profile}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
   );
 }
