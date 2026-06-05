@@ -13,27 +13,34 @@ export default async function Page() {
   if (!user) {
     redirect("/emailpassword");
   }
-  else {
-    const { data: profile } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
-    return (
-      <>
-        <Box>
-          <div className="relative">
-            <EditProfileButton profile={profile} />
-
-            <p className="text-3xl font-bold">{profile?.username ?? user.email}</p>
-            <p>{profile?.bio ?? "No bio available."}</p>
-            <p>Winrate: {profile?.wins ?? 0 / (profile?.losses ?? 1) * 100}%</p>
-          </div>
-        </Box>
-      </>
-    );
-  }
-
   
+  const { data: profile } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  const wins = profile?.wins ?? 0;
+  const losses = profile?.losses ?? 0;
+
+  const totalGames = wins + losses;
+
+  const winrate =
+    totalGames === 0
+      ? 0
+      : Math.round((wins / totalGames) * 100);
+      
+  return (
+    <>
+      <Box>
+        <div className="relative">
+          <EditProfileButton profile={profile} />
+
+          <p className="text-3xl font-bold">{profile?.username ?? user.email}</p>
+          <p>{profile?.bio ?? "No bio available."}</p>
+          <p>Winrate: {winrate}%</p>
+        </div>
+      </Box>
+    </>
+  );
 }

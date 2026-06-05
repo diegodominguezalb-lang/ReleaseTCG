@@ -23,6 +23,9 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { UnfoldMoreIcon, SparklesIcon, CheckmarkBadgeIcon, CreditCardIcon, NotificationIcon, LogoutIcon } from "@hugeicons/core-free-icons"
 
+import { createClient } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation"
+
 export function NavUser({
   user,
 }: {
@@ -33,7 +36,16 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  
+  // enables sign out in the dropdown menu, and redirects to the login page after signing out
+  const supabase = createClient()
+  const router = useRouter()
 
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    router.push("/emailpassword")
+    router.refresh()
+  }
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -95,7 +107,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <HugeiconsIcon icon={LogoutIcon} strokeWidth={2} />
               Log out
             </DropdownMenuItem>

@@ -4,11 +4,21 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
+import type { Profile } from "@/types/profile";
+
+import { ProfileSection } from "./ProfileSection";
+import { PasswordSection } from "./PasswordSection";
+import { updateProfile } from "@/utils/profile/updateProfile";
+import {
+  changePassword,
+  sendPasswordVerificationCode,
+} from "@/utils/profile/changePassword";
+
 export function EditProfileModal({
   profile,
   onClose,
 }: {
-  profile: any;
+  profile: Profile;
   onClose: () => void;
 }) {
   const [editingUsername, setEditingUsername] = useState(false);
@@ -27,10 +37,35 @@ export function EditProfileModal({
 
   const [saving, setSaving] = useState(false);
 
+  const [verificationCode, setVerificationCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
+
   const router = useRouter();
+
+  // this sends the nonce so that the user can verify their password change 
+  async function handleSendCode() {
+    const { error } =
+      await sendPasswordVerificationCode();
+    
+    console.log("sendPasswordVerificationCode error:", error);
+
+    if (error) {
+      setPasswordError(error.message);
+      return;
+    }
+
+    console.log("Verification code requested successfully");
+
+    setCodeSent(true);
+    setPasswordError("");
+  }
 
   async function save() {
     setSaving(true);
+    setPasswordError("");
 
     const supabase = createClient();
 
@@ -43,21 +78,57 @@ export function EditProfileModal({
       return;
     }
 
-    // this updates the user's information when they click save changes
-    const { error } = await supabase
-      .from("users")
-      .update({
-        username,
-        bio,
-      })
-      .eq("id", user.id);
+    const {error } = await updateProfile(
+      user.id,
+      username,
+      bio
+    );
+
+    if (error) {
+      console.error(error);
+      setSaving(false);
+      return;
+    }
+
+    // Only attempt password change if user entered one
+    if (newPassword.length > 0) {
+      if (newPassword !== confirmPassword) {
+        setPasswordError("Passwords do not match");
+        setSaving(false);
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        setPasswordError(
+          "Password must be at least 8 characters"
+        );
+        setSaving(false);
+        return;
+      }
+
+      if (!verificationCode.trim()) {
+        setPasswordError(
+          "Verification code required"
+        );
+        setSaving(false);
+        return;
+      }
+
+      const { error } = await changePassword(
+        newPassword,
+        verificationCode
+      );
+
+      if (error) {
+        setPasswordError(error.message);
+        setSaving(false);
+        return;
+      }
+    }
 
     setSaving(false);
-
-    if (!error) {
-      onClose();
-      router.refresh();
-    }
+    onClose();
+    router.refresh();
   }
 
   return (
@@ -66,81 +137,29 @@ export function EditProfileModal({
         <h2 className="mb-6 text-2xl font-bold">
           Edit Profile
         </h2>
+        
+        <ProfileSection
+          username={username}
+          setUsername={setUsername}
+          draftUsername={draftUsername}
+          setDraftUsername={setDraftUsername}
+          bio={bio}
+          setBio={setBio}
+          editingUsername={editingUsername}
+          setEditingUsername={setEditingUsername}
+        />
 
-        {/* Username Section */}
-        <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium">
-            Username
-          </label>
-
-          {!editingUsername ? (
-            <div className="flex items-center gap-3">
-              <span className="rounded-md border px-3 py-2">
-                {username}
-              </span>
-
-              <button
-                onClick={() =>
-                  setEditingUsername(true)
-                }
-                className="rounded-md border px-3 py-2 text-sm"
-              >
-                Change
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <input
-                value={draftUsername}
-                onChange={(e) =>
-                  setDraftUsername(e.target.value)
-                }
-                className="flex-1 rounded-md border px-3 py-2"
-              />
-
-              <button
-                onClick={() => {
-                  setUsername(
-                    draftUsername.trim()
-                  );
-                  setEditingUsername(false);
-                }}
-                className="rounded-md bg-green-600 px-3 py-2 text-white"
-              >
-                Confirm
-              </button>
-
-              <button
-                onClick={() => {
-                  setDraftUsername(
-                    username
-                  );
-                  setEditingUsername(false);
-                }}
-                className="rounded-md border px-3 py-2"
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Bio Section */}
-        <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium">
-            Bio
-          </label>
-
-          <textarea
-            value={bio}
-            onChange={(e) =>
-              setBio(e.target.value)
-            }
-            rows={4}
-            className="w-full rounded-md border px-3 py-2"
-            placeholder="Tell other players about yourself..."
-          />
-        </div>
+        <PasswordSection
+          newPassword={newPassword}
+          setNewPassword={setNewPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          verificationCode={verificationCode}
+          setVerificationCode={setVerificationCode}
+          passwordError={passwordError}
+          codeSent={codeSent}
+          onSendCode={handleSendCode}
+        />
 
         {/* Footer */}
         <div className="flex justify-end gap-3">
