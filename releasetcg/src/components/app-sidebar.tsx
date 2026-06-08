@@ -16,9 +16,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { LayoutBottomIcon, AudioWave01Icon, CommandIcon, ComputerTerminalIcon, RoboticIcon, BookOpen02Icon, Settings05Icon, CropIcon, PieChartIcon, MapsIcon, HomeIcon } from "@hugeicons/core-free-icons"
 import Link from "next/link"
 
-/*
-  ACCOUNT SECTION
-*/
+// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -135,16 +133,7 @@ const data = {
         },
       ],
     },
-    {
-      title: "History",
-      url: "#",
-      icon: (
-        <GearIcon
-        />
-      ),
-    }
-  ]
-  /*,
+  ],
   projects: [
     {
       name: "Dashboard",
@@ -161,7 +150,6 @@ const data = {
       ),
     },
   ],
-  */
 }
 
 export function AppSidebar({
@@ -185,7 +173,7 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/*<NavProjects projects={data.projects} /> */}
+        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser
