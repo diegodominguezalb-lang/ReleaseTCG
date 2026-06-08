@@ -74,10 +74,6 @@ const data = {
           title: "Set 1",
           url: "#",
         },
-        {
-          title: "Cosmetics",
-          url: "#",
-        },
       ],
     },
     {
@@ -123,29 +119,20 @@ const data = {
     },
   ],
   projects: [
-    /*
     {
-      name: "Design Engineering",
-      url: "#",
+      name: "Dashboard",
+      url: "/dashboard",
       icon: (
         <HugeiconsIcon icon={CropIcon} strokeWidth={2} />
       ),
     },
     {
-      name: "Sales & Marketing",
+      name: "Cosmetics",
       url: "#",
       icon: (
         <HugeiconsIcon icon={PieChartIcon} strokeWidth={2} />
       ),
     },
-    {
-      name: "Travel",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={MapsIcon} strokeWidth={2} />
-      ),
-    },
-    */
   ],
 }
 

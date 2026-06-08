@@ -47,7 +47,6 @@ export default function AuthForm({
     } else {
       setStatus("Signed in successfully");
       router.push("/");
-      onAuth();
     }
   }
 
