@@ -13,6 +13,7 @@ import {
   changePassword,
   sendPasswordVerificationCode,
 } from "@/utils/profile/changePassword";
+import { validatePassword } from "@/utils/validation/validatePassword";
 
 export function EditProfileModal({
   profile,
@@ -98,10 +99,10 @@ export function EditProfileModal({
         return;
       }
 
-      if (newPassword.length < 8) {
-        setPasswordError(
-          "Password must be at least 8 characters"
-        );
+      const validation = validatePassword(newPassword);
+
+      if (!validation.valid) {
+        setPasswordError(validation.message);
         setSaving(false);
         return;
       }
