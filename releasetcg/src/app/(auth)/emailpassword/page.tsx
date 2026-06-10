@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import { redirect } from "next/dist/client/components/navigation";
-=======
 import { redirect } from "next/navigation";
->>>>>>> Stashed changes
 import EmailPassword from "./components/emailpassword";
 import { createClient } from "@/utils/supabase/server";
 
