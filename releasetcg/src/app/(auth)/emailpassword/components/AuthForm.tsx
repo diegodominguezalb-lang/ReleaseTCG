@@ -17,7 +17,7 @@ export default function AuthForm({
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
   const router = useRouter();
-
+  
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -50,6 +50,7 @@ export default function AuthForm({
     }
   }
 
+  const modes = ["login", "signup"] as const;
   return (
     <form
       className="relative overflow-hidden rounded-[32px] border border-white-500/30 bg-[#1e1e24] p-8 text-slate-100 shadow-[0_35px_90px_rgba(2,6,23,0.65)]"
@@ -62,11 +63,11 @@ export default function AuthForm({
         </h3>
 
         <div className="flex rounded-full border border-white/10 bg-black/[0.3] p-1 text-xs font-semibold text-slate-300">
-          {["login", "signup"].map((option) => (
+          {modes.map((option) => (
             <button
               key={option}
               type="button"
-              onClick={() => setMode(option as any)}
+              onClick={() => setMode(option)}
               className={`rounded-full px-4 py-1 transition ${
                 mode === option
                   ? "bg-gray-500/30 text-white shadow shadow-white-500/20"
@@ -119,6 +120,7 @@ export default function AuthForm({
 
       <button
         type="submit"
+        data-testid="auth-submit"
         className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#1c1b1c] px-4 py-2.5 text-sm font-semibold text-white"
       >
         {mode === "login" ? "Login" : "Create account"}
