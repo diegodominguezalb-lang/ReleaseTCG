@@ -115,22 +115,6 @@ const data = {
           title: "FAQ",
           url: "#",
         },
-        {
-          title: "Building a Deck",
-          url: "#",
-        },
-        {
-          title: "Setting up a Game",
-          url: "#",
-        },
-        {
-          title: "Additional Rules",
-          url: "#",
-        },
-        {
-          title: "FAQ",
-          url: "#",
-        },
       ],
     },
   ],

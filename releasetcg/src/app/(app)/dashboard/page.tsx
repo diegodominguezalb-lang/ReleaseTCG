@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { Box } from "./components/box";
-import { EditProfileButton } from "./components/editProfileButton";
+import { EditProfileButton } from "./components/EditProfileButton";
 import { redirect } from "next/navigation";
 
 export default async function Page() {
