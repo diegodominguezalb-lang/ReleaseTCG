@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import { validatePassword } from "@/utils/validation/validatePassword";
 
 export default function AuthForm({
   supabase,
@@ -22,6 +23,13 @@ export default function AuthForm({
     e.preventDefault();
 
     if (mode === "signup") {
+      const validation = validatePassword(password);
+
+      if (!validation.valid) {
+        setStatus(validation.message);
+        return;
+      }
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
