@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
-import { Card } from "@/types/cardSummary";
+import { CardSummary } from "@/types/cardSummary";
 
-export async function getCards(): Promise<Card[]> {
+export async function getCards(): Promise<CardSummary[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -15,6 +15,9 @@ export async function getCards(): Promise<Card[]> {
       color2,
       color3,
       color4,
+      trait,
+      effect1,
+      effect2,
       pool
     `);
 
@@ -36,6 +39,10 @@ export async function getCards(): Promise<Card[]> {
       card.color4,
     ].filter(Boolean),
 
-    status: card.pool,
+    trait: card.trait,
+    effect1: card.effect1,
+    effect2: card.effect2,
+
+    pool: card.pool,
   }));
 }
