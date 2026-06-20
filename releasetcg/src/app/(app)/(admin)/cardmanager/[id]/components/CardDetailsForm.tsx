@@ -13,6 +13,7 @@ import { ImageSection } from "./cardform/sections/ImageSection";
 
 import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 
+import { UpdateCardDTO } from "./cardform/types";
 type Props = {
   card: DatabaseCard;
 };
@@ -26,15 +27,42 @@ export function CardDetailsForm({ card }: Props) {
     key: K,
     value: CardForm[K]
   ) {
-    setForm((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  }
+    console.log("Updating:", key, "→", value);
+
+    setForm((prev) => {
+        const next = {
+        ...prev,
+        [key]: value,
+        };
+
+        console.log("Next form:", next);
+
+        return next;
+    });
+ }
 
   async function handleSave() {
     console.log(form);
-    // await updateCard(form);
+    const payload: UpdateCardDTO = {
+        id: card.id,
+        data: form,
+    };
+
+    const res = await fetch("/api/cards/update", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+        const data = await res.json();
+        console.error(data.error);
+        return;
+    }
+
+    console.log("Saved!");
   }
 
   return (

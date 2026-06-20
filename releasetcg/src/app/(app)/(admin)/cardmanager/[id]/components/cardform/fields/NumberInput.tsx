@@ -18,7 +18,7 @@ export function NumberInput({
       <input
         type="number"
         className="w-full rounded border p-2"
-        value={value}
+        value={value ?? 0}
         onChange={(e) =>
           onChange(Number(e.target.value))
         }

@@ -1,9 +1,7 @@
-import { DatabaseCard, CardForm } from "./types";
+import { CardForm, DatabaseCard } from "./types";
 
 export function normalizeCard(card: DatabaseCard): CardForm {
   return {
-    id: card.id,
-
     name: card.name,
     power: card.power,
     bulk: card.bulk,
@@ -24,7 +22,7 @@ export function normalizeCard(card: DatabaseCard): CardForm {
     artist: card.artist ?? "",
     expansion: card.expansion ?? "",
 
-    pool: card.pool ?? "draft",
+    pool: card.pool ?? "",
 
     image_url: card.image_url ?? "",
   };
