@@ -39,14 +39,6 @@ export function BasicInfoSection({
           }
         />
       </div>
-
-      <TextInput
-        label="Trait"
-        value={form.trait}
-        onChange={(value) =>
-          update("trait", value)
-        }
-      />
     </CardSection>
   );
 }

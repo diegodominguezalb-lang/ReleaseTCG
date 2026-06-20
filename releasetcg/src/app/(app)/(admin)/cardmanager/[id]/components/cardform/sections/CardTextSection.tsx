@@ -1,6 +1,7 @@
 import { CardForm, UpdateCard } from "../types";
 import { CardSection } from "../CardSection";
 import { TextAreaInput } from "../fields/TextAreaInput";
+import { TextInput } from "../fields/TextInput";
 
 type Props = {
   form: CardForm;
@@ -13,6 +14,14 @@ export function CardTextSection({
 }: Props) {
   return (
     <CardSection title="Card Text">
+      <TextInput
+        label="Trait"
+        value={form.trait}
+        onChange={(value) =>
+          update("trait", value)
+        }
+      />
+      
       <TextAreaInput
         rows={5}
         placeholder="Effect 1"

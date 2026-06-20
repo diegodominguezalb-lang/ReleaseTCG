@@ -2,33 +2,25 @@
 
 import { useMemo, useState } from "react";
 
-import {
-  CardForm,
-  DatabaseCard,
-  UpdateCardDTO,
-} from "../cardform/types";
+import { CardForm, UpdateCardDTO } from "../cardform/types";
 
-import { normalizeCard } from "../cardform/normalizeCard";
+export type SaveState = "idle" | "saving" | "saved" | "error";
 
-export type SaveState =
-  | "idle"
-  | "saving"
-  | "saved"
-  | "error";
+type UseCardFormArgs = {
+  id?: string;
+  initial: CardForm;
+};
 
-export function useCardForm(card: DatabaseCard) {
-  // Keep a normalized copy of the original card
-  const originalForm = useMemo(
-    () => normalizeCard(card),
-    [card]
-  );
+export function useCardForm({ id, initial }: UseCardFormArgs) {
+  const isNew = !id;
 
-  const [form, setForm] = useState<CardForm>(
-    originalForm
-  );
+  /**
+   * Stable baseline (DO NOT recompute)
+   */
+  const [originalForm] = useState(initial);
 
-  const [saveState, setSaveState] =
-    useState<SaveState>("idle");
+  const [form, setForm] = useState<CardForm>(initial);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
 
   function update<K extends keyof CardForm>(
     key: K,
@@ -40,32 +32,29 @@ export function useCardForm(card: DatabaseCard) {
     }));
   }
 
-  const hasChanges =
-    JSON.stringify(form) !==
-    JSON.stringify(originalForm);
+  const hasChanges = useMemo(() => {
+    return !shallowEqual(form, originalForm);
+  }, [form, originalForm]);
 
   async function handleSave() {
-    if (!hasChanges) return;
+    if (!hasChanges || saveState === "saving") return;
 
     setSaveState("saving");
 
-    const payload: UpdateCardDTO = {
-      id: card.id,
-      data: form,
-    };
+    const endpoint = isNew
+      ? "/api/cards/create"
+      : "/api/cards/update";
+
+    const payload = isNew
+      ? { data: form }
+      : { id, data: form };
 
     try {
-      const res = await fetch(
-        "/api/cards/update",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       if (!res.ok) {
         setSaveState("error");
@@ -74,9 +63,7 @@ export function useCardForm(card: DatabaseCard) {
 
       setSaveState("saved");
 
-      setTimeout(() => {
-        setSaveState("idle");
-      }, 2500);
+      setTimeout(() => setSaveState("idle"), 2000);
     } catch {
       setSaveState("error");
     }
@@ -85,11 +72,22 @@ export function useCardForm(card: DatabaseCard) {
   return {
     form,
     update,
-
-    hasChanges,
-
-    saveState,
-
     handleSave,
+    hasChanges,
+    saveState,
+    isNew,
   };
+}
+
+/**
+ * Safer than JSON.stringify
+ */
+function shallowEqual(a: CardForm, b: CardForm) {
+  const keys = Object.keys(a) as (keyof CardForm)[];
+
+  for (const key of keys) {
+    if (a[key] !== b[key]) return false;
+  }
+
+  return true;
 }

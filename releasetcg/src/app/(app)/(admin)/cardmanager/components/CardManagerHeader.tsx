@@ -19,7 +19,7 @@ export function CardManagerHeader() {
 
       <button
         onClick={() =>
-          router.push("/cardmanager/new")
+          router.push("/cardmanager/newCard")
         }
         className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
       >

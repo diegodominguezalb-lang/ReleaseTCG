@@ -3,20 +3,13 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function POST(req: Request) {
   try {
-    const { id, data } = await req.json();
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "Missing card id" },
-        { status: 400 }
-      );
-    }
+    const { data } = await req.json();
 
     const supabase = await createClient();
 
-    const { error } = await supabase
+    const { data: inserted, error } = await supabase
       .from("cards")
-      .update({
+      .insert({
         name: data.name,
         power: data.power,
         bulk: data.bulk,
@@ -37,11 +30,12 @@ export async function POST(req: Request) {
         artist: data.artist || null,
         expansion: data.expansion || null,
 
-        pool: data.pool || null,
+        pool: data.pool || "draft",
 
         image_url: data.image_url || null,
       })
-      .eq("id", id);
+      .select("id")
+      .single();
 
     if (error) {
       console.error(error);
@@ -51,7 +45,9 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      id: inserted.id,
+    });
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message },
