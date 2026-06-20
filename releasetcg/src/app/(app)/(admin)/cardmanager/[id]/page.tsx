@@ -16,7 +16,7 @@ export default async function EditCardPage({
   }
 
   return (
-    <main className="mx-auto max-w-6xl p-8">
+    <main className="h-screen">
       <CardDetailsForm card={card} />
     </main>
   );
