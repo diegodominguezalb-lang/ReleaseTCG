@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getCard } from "./utils/getCard";
-import { CardDetailsForm } from "./components/CardDetailsForm";
+import { CardDetailsForm } from "./components/cardform/CardDetailsForm";
 
 export default async function EditCardPage({
   params,
