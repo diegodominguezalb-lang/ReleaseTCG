@@ -70,7 +70,7 @@ const data = {
       items: [
         {
           title: "All Cards",
-          url: "#",
+          url: "/gallery",
         },
         {
           title: "Set 1",
