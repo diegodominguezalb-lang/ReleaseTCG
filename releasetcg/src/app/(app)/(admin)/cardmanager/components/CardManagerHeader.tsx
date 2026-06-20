@@ -1,4 +1,10 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 export function CardManagerHeader() {
+  const router = useRouter();
+
   return (
     <div className="flex items-center justify-between">
       <div>
@@ -7,9 +13,18 @@ export function CardManagerHeader() {
         </h1>
 
         <p className="text-muted-foreground">
-          Manage the Release TCG card database.
+          Manage every card in the game.
         </p>
       </div>
+
+      <button
+        onClick={() =>
+          router.push("/cardmanager/new")
+        }
+        className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+      >
+        + New Card
+      </button>
     </div>
   );
 }
