@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCard } from "./utils/getCard";
-import { CardDetailsForm } from "./components/CardDetailsForm";
+import { CardDetailsForm } from "./components/cardform/CardDetailsForm";
+import { normalizeCard } from "./components/cardform/normalizeCard";
 
 export default async function EditCardPage({
   params,
@@ -17,7 +18,10 @@ export default async function EditCardPage({
 
   return (
     <main className="h-screen">
-      <CardDetailsForm card={card} />
+        <CardDetailsForm
+            id={card.id}
+            initial={normalizeCard(card)}
+        />
     </main>
   );
 }

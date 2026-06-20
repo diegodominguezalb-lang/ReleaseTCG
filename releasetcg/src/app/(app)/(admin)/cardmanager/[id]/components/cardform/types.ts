@@ -27,8 +27,6 @@ export type DatabaseCard = {
 };
 
 export type CardForm = {
-  id: string;
-
   name: string;
   power: number;
   bulk: number;
@@ -52,6 +50,11 @@ export type CardForm = {
   pool: string;
 
   image_url: string;
+};
+
+export type UpdateCardDTO = {
+  id: string;
+  data: CardForm;
 };
 
 export type UpdateCard = <K extends keyof CardForm>(

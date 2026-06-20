@@ -21,7 +21,7 @@ export function SelectInput({
 
       <select
         className="w-full rounded border p-2"
-        value={value}
+        value={value ?? ""}
         onChange={(e) =>
           onChange(e.target.value)
         }
