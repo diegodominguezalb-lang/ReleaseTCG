@@ -19,7 +19,7 @@ export function TextInput({
 
       <input
         className="w-full rounded border p-2"
-        value={value}
+        value={value ?? ""}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
       />

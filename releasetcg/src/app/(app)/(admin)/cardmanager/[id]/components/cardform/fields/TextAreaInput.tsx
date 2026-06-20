@@ -24,7 +24,7 @@ export function TextAreaInput({
       <textarea
         rows={rows}
         className="w-full rounded border p-2"
-        value={value}
+        value={value ?? ""}
         placeholder={placeholder}
         onChange={(e) =>
           onChange(e.target.value)
