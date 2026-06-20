@@ -10,10 +10,6 @@ export function CardManagerHeader() {
           Manage the Release TCG card database.
         </p>
       </div>
-
-      <button className="rounded-md bg-blue-600 px-4 py-2 text-white">
-        + New Card
-      </button>
     </div>
   );
 }

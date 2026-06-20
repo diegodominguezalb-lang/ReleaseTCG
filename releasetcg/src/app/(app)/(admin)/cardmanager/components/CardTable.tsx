@@ -1,83 +1,70 @@
-import { StatusBadge } from "./StatusBadge";
+"use client";
+import { Card } from "@/types/cardSummary";
 
-type Card = {
-  id: number;
-  number: string;
-  name: string;
-  type: string;
-  cost: number;
-  pool: string;
-};
+import { useRouter } from "next/navigation";
+import { StatusBadge } from "./StatusBadge";
+import { PaletteChips } from "./PaletteChips";
 
 export function CardTable({
   cards,
 }: {
   cards: Card[];
 }) {
+  const router = useRouter();
+
   return (
-    <table className="w-full border-collapse">
-      <thead>
-        <tr className="border-b">
-          <th className="p-3 text-left">
-            #
-          </th>
+    <div className="overflow-hidden rounded-xl border">
+        <table className="w-full border-collapse">
+        <thead className="bg-muted">
+            <tr className="border-b">
+            <th className="p-3 text-left">
+                Card
+            </th>
 
-          <th className="p-3 text-left">
-            Name
-          </th>
+            <th className="p-3 text-left">
+                Stats
+            </th>
 
-          <th className="p-3 text-left">
-            Type
-          </th>
+            <th className="p-3 text-left">
+                Palette
+            </th>
 
-          <th className="p-3 text-left">
-            Cost
-          </th>
+            <th className="p-3 text-left">
+                Status
+            </th>
+            </tr>
+        </thead>
 
-          <th className="p-3 text-left">
-            Pool
-          </th>
+        <tbody>
+            {cards.map((card) => (
+            <tr
+                key={card.id}
+                className="cursor-pointer border-b hover:bg-muted"
+                onClick={() =>
+                    router.push(`/cardmanager/${card.id}`)
+                }
+            >
+                <td className="p-3">
+                {card.name}
+                </td>
 
-          <th />
-        </tr>
-      </thead>
+                <td className="p-3">
+                {card.power}/{card.bulk}
+                </td>
 
-      <tbody>
-        {cards.map((card) => (
-          <tr
-            key={card.id}
-            className="border-b"
-          >
-            <td className="p-3">
-              {card.number}
-            </td>
+                <td className="p-3">
+                    <PaletteChips palette={card.palette} />
+                </td>
 
-            <td className="p-3">
-              {card.name}
-            </td>
-
-            <td className="p-3">
-              {card.type}
-            </td>
-
-            <td className="p-3">
-              {card.cost}
-            </td>
-
-            <td className="p-3">
-              <StatusBadge
-                status={card.pool}
-              />
-            </td>
-
-            <td className="p-3">
-              <button>
-                Edit
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                <td className="p-3">
+                <StatusBadge
+                    status={card.status}
+                />
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        </table>
+    </div>
   );
 }

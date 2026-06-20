@@ -1,4 +1,4 @@
-import { getCards } from "./utils/getCard";
+import { getCards } from "./utils/getCards";
 
 import { CardManagerHeader } from "./components/CardManagerHeader";
 import { CardFilters } from "./components/CardFilters";
