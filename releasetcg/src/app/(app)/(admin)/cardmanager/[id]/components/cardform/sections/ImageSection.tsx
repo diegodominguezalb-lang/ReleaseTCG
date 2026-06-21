@@ -1,6 +1,6 @@
 import { CardForm, UpdateCard } from "../types";
 import { CardSection } from "../CardSection";
-import { TextInput } from "../fields/TextInput";
+import { TextInput } from "../../../../../../components/fields/TextInput";
 
 type Props = {
   form: CardForm;

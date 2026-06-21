@@ -1,6 +1,6 @@
 import { CardForm, UpdateCard } from "../types";
 import { CardSection } from "../CardSection";
-import { SelectInput } from "../fields/SelectInput";
+import { SelectInput } from "../../../../../../components/fields/SelectInput";
 import { COLOR_OPTIONS } from "../constants";
 
 type Props = {

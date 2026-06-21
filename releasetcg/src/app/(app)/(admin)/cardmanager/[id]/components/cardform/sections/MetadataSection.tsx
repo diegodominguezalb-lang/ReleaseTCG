@@ -1,7 +1,7 @@
 import { CardForm, UpdateCard } from "../types";
 import { CardSection } from "../CardSection";
-import { TextInput } from "../fields/TextInput";
-import { SelectInput } from "../fields/SelectInput";
+import { TextInput } from "../../../../../../components/fields/TextInput";
+import { SelectInput } from "../../../../../../components/fields/SelectInput";
 import { POOL_OPTIONS } from "../constants";
 
 type Props = {
