@@ -1,4 +1,4 @@
-import { getCards } from "./utils/getCards";
+import { getCards } from "@/utils/supabase/cards/getCards";
 import { CardManager } from "./CardManager";
 
 export default async function Page() {

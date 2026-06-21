@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getCard } from "./utils/getCard";
+import { getCard } from "@/utils/supabase/cards/getCard";
 import { CardDetailsForm } from "./components/cardform/CardDetailsForm";
 import { normalizeCard } from "./components/cardform/normalizeCard";
 
