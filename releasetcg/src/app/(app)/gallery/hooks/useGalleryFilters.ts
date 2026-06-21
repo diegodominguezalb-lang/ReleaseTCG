@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 
+import { PublicCard } from "@/types/cards";
+
 import {
-  PublicCard,
   GalleryFilterState,
   GallerySort,
   SortDirection,

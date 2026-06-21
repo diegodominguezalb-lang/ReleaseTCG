@@ -16,7 +16,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { LayoutBottomIcon, AudioWave01Icon, CommandIcon, ComputerTerminalIcon, RoboticIcon, BookOpen02Icon, Settings05Icon, CropIcon, PieChartIcon, MapsIcon, HomeIcon } from "@hugeicons/core-free-icons"
 import Link from "next/link"
 import { User } from "@supabase/supabase-js/dist/index.cjs"
-import { Profile } from "@/types/profile"
+import { Profile } from "@/types/profiles"
 
 // This is sample data.
 const data = {

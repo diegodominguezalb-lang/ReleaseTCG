@@ -1,5 +1,5 @@
 "use client";
-import { CardSummary } from "@/types/cardSummary";
+import { AdminCardSummary } from "@/types/cards";
 
 import { useRouter } from "next/navigation";
 import { PaletteChips } from "./PaletteChips";
@@ -7,7 +7,7 @@ import { PaletteChips } from "./PaletteChips";
 export function CardTable({
   cards,
 }: {
-  cards: CardSummary[];
+  cards: AdminCardSummary[];
 }) {
   const router = useRouter();
 

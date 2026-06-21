@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 
-import { PublicCard } from "@/app/(app)/gallery/types";
+import { PublicCard } from "@/types/cards";
 
 export async function getPublicCards(): Promise<PublicCard[]> {
   const supabase = await createClient();

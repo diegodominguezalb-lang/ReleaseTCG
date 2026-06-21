@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { CardSummary } from "@/types/cardSummary";
+import { AdminCardSummary } from "@/types/cards";
 
 import { CardManagerHeader } from "./components/CardManagerHeader";
 import { CardFilters } from "./components/CardFilters";
@@ -11,7 +11,7 @@ import { CardTable } from "./components/CardTable";
 import { filterCards, CardFilters as FiltersType } from "./utils/filterCards";
 
 type Props = {
-  cards: CardSummary[];
+  cards: AdminCardSummary[];
 };
 
 export function CardManager({ cards }: Props) {
