@@ -4,5 +4,4 @@ export type Profile = {
   bio: string | null;
   wins: number;
   losses: number;
-  role: "user" | "admin";
 };
