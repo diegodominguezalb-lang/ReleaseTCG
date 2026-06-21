@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
-import { CardSummary } from "@/types/cardSummary";
+import { AdminCardSummary } from "@/types/cards";
 
-export async function getCards(): Promise<CardSummary[]> {
+export async function getCards(): Promise<AdminCardSummary[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase

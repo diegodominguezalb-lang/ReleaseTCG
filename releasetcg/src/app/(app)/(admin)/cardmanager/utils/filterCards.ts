@@ -1,4 +1,4 @@
-import { CardSummary } from "@/types/cardSummary";
+import { AdminCardSummary } from "@/types/cards";
 
 export type CardFilters = {
   search: string;
@@ -8,7 +8,7 @@ export type CardFilters = {
   color: string;
 };
 
-function matchesSearch(card: CardSummary, query: string) {
+function matchesSearch(card: AdminCardSummary, query: string) {
   if (!query.trim()) return true;
 
   const q = query.toLowerCase();
@@ -26,24 +26,24 @@ function matchesSearch(card: CardSummary, query: string) {
   return searchable.includes(q);
 }
 
-function matchesPool(card: CardSummary, pool: string) {
+function matchesPool(card: AdminCardSummary, pool: string) {
   return pool === "all" || card.pool === pool;
 }
 
-function matchesPower(card: CardSummary, power: string) {
+function matchesPower(card: AdminCardSummary, power: string) {
   return power === "all" || card.power === Number(power);
 }
 
-function matchesBulk(card: CardSummary, bulk: string) {
+function matchesBulk(card: AdminCardSummary, bulk: string) {
   return bulk === "all" || card.bulk === Number(bulk);
 }
 
-function matchesColor(card: CardSummary, color: string) {
+function matchesColor(card: AdminCardSummary, color: string) {
   return color === "all" || card.palette.includes(color);
 }
 
 export function filterCards(
-  cards: CardSummary[],
+  cards: AdminCardSummary[],
   filters: CardFilters
 ) {
   return cards.filter((card) => {

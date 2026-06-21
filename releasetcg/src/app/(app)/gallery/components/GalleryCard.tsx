@@ -1,4 +1,4 @@
-import { PublicCard } from "../types";
+import { PublicCard } from "@/types/cards";
 
 import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 

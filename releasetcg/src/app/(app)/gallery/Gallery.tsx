@@ -1,6 +1,6 @@
 "use client";
 
-import { PublicCard } from "./types";
+import { PublicCard } from "@/types/cards";
 
 import { useGalleryFilters } from "./hooks/useGalleryFilters";
 
