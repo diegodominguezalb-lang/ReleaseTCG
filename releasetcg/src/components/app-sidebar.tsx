@@ -15,8 +15,6 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { LayoutBottomIcon, AudioWave01Icon, CommandIcon, ComputerTerminalIcon, RoboticIcon, BookOpen02Icon, Settings05Icon, CropIcon, PieChartIcon, MapsIcon, HomeIcon } from "@hugeicons/core-free-icons"
 import Link from "next/link"
-import { User } from "@supabase/supabase-js/dist/index.cjs"
-import { Profile } from "@/types/profile"
 
 // This is sample data.
 const data = {
@@ -138,26 +136,13 @@ const data = {
   ],
 }
 
-const adminProjects = [
-  {
-    name: "Card Manager",
-    url: "/cardmanager",
-    icon: (
-      <HugeiconsIcon
-        icon={LayoutBottomIcon}
-        strokeWidth={2}
-      />
-    ),
-  },
-];
-
 export function AppSidebar({
   user,
   profile,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
-  user?: User
-  profile?: Profile
+  user?: any
+  profile?: any
 }) {
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -173,16 +158,13 @@ export function AppSidebar({
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
-        {profile?.role === "admin" && (
-          <NavProjects projects={adminProjects} />
-        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser
           user={{
-            name: data.user?.name ?? data.user?.email,
-            email: data.user?.email,
-            avatar: data.user?.avatar,
+            name: profile?.username ?? user?.email,
+            email: user?.email,
+            avatar: user?.user_metadata?.avatar_url,
           }}
         />
       </SidebarFooter>
