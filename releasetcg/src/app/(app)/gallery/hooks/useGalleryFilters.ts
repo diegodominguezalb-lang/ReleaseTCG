@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { PublicCard } from "@/types/cards";
+import { CardDetails } from "@/types/cards";
 
 import {
   GalleryFilterState,
@@ -11,7 +11,7 @@ import {
 } from "../types";
 
 export function useGalleryFilters(
-  cards: PublicCard[]
+  cards: CardDetails[]
 ) {
 
   const [filters, setFilters] =

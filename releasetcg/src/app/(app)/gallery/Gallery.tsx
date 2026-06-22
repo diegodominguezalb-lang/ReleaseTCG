@@ -1,6 +1,10 @@
 "use client";
 
-import { PublicCard } from "@/types/cards";
+import { useState } from "react";
+
+import { CardDetails } from "@/types/cards";
+
+import { CardModal } from "@/features/cards/CardModal";
 
 import { useGalleryFilters } from "./hooks/useGalleryFilters";
 
@@ -8,7 +12,7 @@ import { GalleryFilters } from "./components/GalleryFilters";
 import { GalleryGrid } from "./components/GalleryGrid";
 
 type Props = {
-  initialCards: PublicCard[];
+  initialCards: CardDetails[];
 };
 
 export function Gallery({
@@ -25,6 +29,9 @@ export function Gallery({
     setDirection,
   } = useGalleryFilters(initialCards);
 
+  const [selectedCard, setSelectedCard] =
+    useState<CardDetails | null>(null);
+
   return (
     <div className="flex h-full flex-col">
 
@@ -37,7 +44,20 @@ export function Gallery({
         onDirection={setDirection}
       />
 
-      <GalleryGrid cards={filteredCards} />
+      <GalleryGrid
+        cards={filteredCards}
+        onCardClick={setSelectedCard}
+      />
+
+      <CardModal
+        card={selectedCard}
+        open={selectedCard !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedCard(null);
+          }
+        }}
+      />
 
     </div>
   );
