@@ -43,7 +43,7 @@ export type CardPool =
   updated_by: string | null;
 };
 
-export type PublicCard = {
+export type CardDetails = {
   id: string;
 
   name: string;
