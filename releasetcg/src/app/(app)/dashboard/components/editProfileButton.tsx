@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { EditProfileModal } from "./EditProfileModal";
+import { EditProfileModal } from "./editProfileModal";
 
 export function EditProfileButton({
   profile,

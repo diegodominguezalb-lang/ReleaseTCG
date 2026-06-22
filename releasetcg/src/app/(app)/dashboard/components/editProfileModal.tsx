@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
-import type { Profile } from "@/types/profile";
+import type { Profile } from "@/types/profiles";
 
 import { ProfileSection } from "./ProfileSection";
 import { PasswordSection } from "./PasswordSection";
