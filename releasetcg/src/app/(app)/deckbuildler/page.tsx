@@ -2,6 +2,13 @@
 
 import { useMemo, useState, useEffect, useCallback } from "react";
 
+import {
+  addCard,
+  removeCard,
+  setLeader,
+  getDeckCounts,
+} from "./deckUtils";
+
 type DeckEntry = {
   cardId: string;
   count: number;
@@ -14,10 +21,6 @@ type Deck = {
 };
 
 export default function DeckBuilderPage() {
-  /**
-   * 🚨 Hydration safety guard
-   * Ensures server HTML and first client render match exactly.
-   */
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -44,71 +47,41 @@ export default function DeckBuilderPage() {
     []
   );
 
-  const mainCount = useMemo(
-    () => deck.mainDeck.reduce((sum, c) => sum + c.count, 0),
-    [deck.mainDeck]
-  );
-
-  const extraCount = useMemo(
-    () => deck.extraDeck.reduce((sum, c) => sum + c.count, 0),
-    [deck.extraDeck]
-  );
-
-  const selectLeader = useCallback((cardId: string) => {
-    setDeck((prev) => ({ ...prev, leader: cardId }));
-  }, []);
-
-  const addToDeck = useCallback(
-    (cardId: string, zone: "main" | "extra") => {
-      setDeck((prev) => {
-        const target = zone === "main" ? "mainDeck" : "extraDeck";
-        const existing = prev[target].find((c) => c.cardId === cardId);
-
-        if (existing) {
-          return {
-            ...prev,
-            [target]: prev[target].map((c) =>
-              c.cardId === cardId ? { ...c, count: c.count + 1 } : c
-            ),
-          };
-        }
-
-        return {
-          ...prev,
-          [target]: [...prev[target], { cardId, count: 1 }],
-        };
-      });
-    },
-    []
-  );
-
-  const removeFromDeck = useCallback(
-    (cardId: string, zone: "main" | "extra") => {
-      setDeck((prev) => {
-        const target = zone === "main" ? "mainDeck" : "extraDeck";
-
-        return {
-          ...prev,
-          [target]: prev[target]
-            .map((c) =>
-              c.cardId === cardId ? { ...c, count: c.count - 1 } : c
-            )
-            .filter((c) => c.count > 0),
-        };
-      });
-    },
-    []
-  );
-
   /**
-   * 🚨 Critical fix:
-   * Prevent SSR/client mismatch completely
+   * 🚨 ALL DECK LOGIC MOVED TO UTILS
    */
-  if (!mounted) {
-    return <div className="p-4 text-sm text-muted-foreground">Loading deck builder...</div>;
-  }
+  const { main, extra } = useMemo(
+    () => getDeckCounts(deck),
+    [deck]
+  );
 
   const leaderSelected = deck.leader !== null;
+
+  const handleSetLeader = useCallback((cardId: string) => {
+    setDeck((prev) => setLeader(prev, cardId));
+  }, []);
+
+  const handleAddCard = useCallback(
+    (cardId: string, zone: "main" | "extra") => {
+      setDeck((prev) => addCard(prev, cardId, zone));
+    },
+    []
+  );
+
+  const handleRemoveCard = useCallback(
+    (cardId: string, zone: "main" | "extra") => {
+      setDeck((prev) => removeCard(prev, cardId, zone));
+    },
+    []
+  );
+
+  if (!mounted) {
+    return (
+      <div className="p-4 text-sm text-muted-foreground">
+        Loading deck builder...
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen grid grid-cols-3 gap-4 p-4">
@@ -137,7 +110,7 @@ export default function DeckBuilderPage() {
                   disabled={!leaderSelected}
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToDeck(card.id, "main");
+                    handleAddCard(card.id, "main");
                   }}
                 >
                   + Main
@@ -148,7 +121,7 @@ export default function DeckBuilderPage() {
                   disabled={!leaderSelected}
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToDeck(card.id, "extra");
+                    handleAddCard(card.id, "extra");
                   }}
                 >
                   + Extra
@@ -158,7 +131,7 @@ export default function DeckBuilderPage() {
                   className="text-xs px-2 py-1 border rounded"
                   onClick={(e) => {
                     e.stopPropagation();
-                    selectLeader(card.id);
+                    handleSetLeader(card.id);
                   }}
                 >
                   Set Leader
@@ -181,7 +154,7 @@ export default function DeckBuilderPage() {
               <button
                 className="border px-3 py-1 rounded"
                 disabled={!leaderSelected}
-                onClick={() => addToDeck(selectedCardId, "main")}
+                onClick={() => handleAddCard(selectedCardId, "main")}
               >
                 Add to Main
               </button>
@@ -189,7 +162,7 @@ export default function DeckBuilderPage() {
               <button
                 className="border px-3 py-1 rounded"
                 disabled={!leaderSelected}
-                onClick={() => addToDeck(selectedCardId, "extra")}
+                onClick={() => handleAddCard(selectedCardId, "extra")}
               >
                 Add to Extra
               </button>
@@ -214,14 +187,14 @@ export default function DeckBuilderPage() {
         </div>
 
         <div className="mb-4">
-          <p className="font-semibold">Main Deck ({mainCount}/20)</p>
+          <p className="font-semibold">Main Deck ({main}/20)</p>
           {deck.mainDeck.map((c) => (
             <div key={c.cardId} className="flex justify-between text-sm">
               <span>
                 {c.cardId} x{c.count}
               </span>
               <button
-                onClick={() => removeFromDeck(c.cardId, "main")}
+                onClick={() => handleRemoveCard(c.cardId, "main")}
                 className="text-xs"
               >
                 remove
@@ -231,14 +204,14 @@ export default function DeckBuilderPage() {
         </div>
 
         <div>
-          <p className="font-semibold">Extra Deck ({extraCount}/5)</p>
+          <p className="font-semibold">Extra Deck ({extra}/5)</p>
           {deck.extraDeck.map((c) => (
             <div key={c.cardId} className="flex justify-between text-sm">
               <span>
                 {c.cardId} x{c.count}
               </span>
               <button
-                onClick={() => removeFromDeck(c.cardId, "extra")}
+                onClick={() => handleRemoveCard(c.cardId, "extra")}
                 className="text-xs"
               >
                 remove
