@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-// import { addCard, removeCard, getTotalCopies, canAddCard } from "./deckUtils";
+import { useMemo, useState, useEffect, useCallback } from "react";
 
 type DeckEntry = {
   cardId: string;
@@ -15,6 +14,16 @@ type Deck = {
 };
 
 export default function DeckBuilderPage() {
+  /**
+   * 🚨 Hydration safety guard
+   * Ensures server HTML and first client render match exactly.
+   */
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [deck, setDeck] = useState<Deck>({
     leader: null,
     mainDeck: [],
@@ -23,65 +32,83 @@ export default function DeckBuilderPage() {
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
-  // Placeholder: replace with Supabase cards query
-  const cards = useMemo(() => {
-    return [
+  /**
+   * Mock cards (replace with Supabase later)
+   */
+  const cards = useMemo(
+    () => [
       { id: "card-1", name: "Fire Dragon", colors: 2 },
       { id: "card-2", name: "Ice Mage", colors: 1 },
       { id: "card-3", name: "Phoenix Lord", colors: 4 },
-    ];
+    ],
+    []
+  );
+
+  const mainCount = useMemo(
+    () => deck.mainDeck.reduce((sum, c) => sum + c.count, 0),
+    [deck.mainDeck]
+  );
+
+  const extraCount = useMemo(
+    () => deck.extraDeck.reduce((sum, c) => sum + c.count, 0),
+    [deck.extraDeck]
+  );
+
+  const selectLeader = useCallback((cardId: string) => {
+    setDeck((prev) => ({ ...prev, leader: cardId }));
   }, []);
 
-  const mainCount = useMemo(() => {
-    return deck.mainDeck.reduce((sum, c) => sum + c.count, 0);
-  }, [deck.mainDeck]);
+  const addToDeck = useCallback(
+    (cardId: string, zone: "main" | "extra") => {
+      setDeck((prev) => {
+        const target = zone === "main" ? "mainDeck" : "extraDeck";
+        const existing = prev[target].find((c) => c.cardId === cardId);
 
-  const extraCount = useMemo(() => {
-    return deck.extraDeck.reduce((sum, c) => sum + c.count, 0);
-  }, [deck.extraDeck]);
+        if (existing) {
+          return {
+            ...prev,
+            [target]: prev[target].map((c) =>
+              c.cardId === cardId ? { ...c, count: c.count + 1 } : c
+            ),
+          };
+        }
 
-  function selectLeader(cardId: string) {
-    setDeck((prev) => ({
-      ...prev,
-      leader: cardId,
-    }));
-  }
-
-  function addToDeck(cardId: string, zone: "main" | "extra") {
-    setDeck((prev) => {
-      const target = zone === "main" ? "mainDeck" : "extraDeck";
-      const existing = prev[target].find((c) => c.cardId === cardId);
-
-      if (existing) {
         return {
           ...prev,
-          [target]: prev[target].map((c) =>
-            c.cardId === cardId ? { ...c, count: c.count + 1 } : c
-          ),
+          [target]: [...prev[target], { cardId, count: 1 }],
         };
-      }
+      });
+    },
+    []
+  );
 
-      return {
-        ...prev,
-        [target]: [...prev[target], { cardId, count: 1 }],
-      };
-    });
+  const removeFromDeck = useCallback(
+    (cardId: string, zone: "main" | "extra") => {
+      setDeck((prev) => {
+        const target = zone === "main" ? "mainDeck" : "extraDeck";
+
+        return {
+          ...prev,
+          [target]: prev[target]
+            .map((c) =>
+              c.cardId === cardId ? { ...c, count: c.count - 1 } : c
+            )
+            .filter((c) => c.count > 0),
+        };
+      });
+    },
+    []
+  );
+
+  /**
+   * 🚨 Critical fix:
+   * Prevent SSR/client mismatch completely
+   */
+  if (!mounted) {
+    return <div className="p-4 text-sm text-muted-foreground">Loading deck builder...</div>;
   }
 
-  function removeFromDeck(cardId: string, zone: "main" | "extra") {
-    setDeck((prev) => {
-      const target = zone === "main" ? "mainDeck" : "extraDeck";
-
-      return {
-        ...prev,
-        [target]: prev[target]
-          .map((c) =>
-            c.cardId === cardId ? { ...c, count: c.count - 1 } : c
-          )
-          .filter((c) => c.count > 0),
-      };
-    });
-  }
+  const leaderSelected = deck.leader !== null;
 
   return (
     <div className="h-screen grid grid-cols-3 gap-4 p-4">
@@ -89,7 +116,7 @@ export default function DeckBuilderPage() {
       <div className="border rounded-lg p-3 overflow-auto">
         <h2 className="font-bold mb-2">Available Cards</h2>
 
-        {!deck.leader && (
+        {!leaderSelected && (
           <p className="text-sm text-muted-foreground mb-2">
             Select a leader to unlock deck building
           </p>
@@ -107,7 +134,7 @@ export default function DeckBuilderPage() {
               <div className="flex gap-2 mt-2">
                 <button
                   className="text-xs px-2 py-1 border rounded"
-                  disabled={!deck.leader}
+                  disabled={!leaderSelected}
                   onClick={(e) => {
                     e.stopPropagation();
                     addToDeck(card.id, "main");
@@ -118,7 +145,7 @@ export default function DeckBuilderPage() {
 
                 <button
                   className="text-xs px-2 py-1 border rounded"
-                  disabled={!deck.leader}
+                  disabled={!leaderSelected}
                   onClick={(e) => {
                     e.stopPropagation();
                     addToDeck(card.id, "extra");
@@ -153,7 +180,7 @@ export default function DeckBuilderPage() {
             <div className="mt-4 flex gap-2">
               <button
                 className="border px-3 py-1 rounded"
-                disabled={!deck.leader}
+                disabled={!leaderSelected}
                 onClick={() => addToDeck(selectedCardId, "main")}
               >
                 Add to Main
@@ -161,7 +188,7 @@ export default function DeckBuilderPage() {
 
               <button
                 className="border px-3 py-1 rounded"
-                disabled={!deck.leader}
+                disabled={!leaderSelected}
                 onClick={() => addToDeck(selectedCardId, "extra")}
               >
                 Add to Extra
