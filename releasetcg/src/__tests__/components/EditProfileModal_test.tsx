@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { EditProfileModal } from "@/app/(app)/dashboard/components/edit";
+import { EditProfileModal } from "@/app/(app)/dashboard/components/editProfileModal";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({

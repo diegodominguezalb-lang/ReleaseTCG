@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { EditProfileModal } from "@/app/(app)/dashboard/components/EditProfileModal";
+import { EditProfileModal } from "@/app/(app)/dashboard/components/editProfileModal";
 
 import { createClient } from "@/utils/supabase/client";
 import { updateProfile } from "@/utils/profile/updateProfile";
