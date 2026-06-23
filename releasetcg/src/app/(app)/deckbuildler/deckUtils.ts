@@ -1,72 +1,167 @@
-export type DeckEntry = {
-  cardId: string;
-  count: number;
-};
+import type {
+  Deck,
+  Zone,
+  CardCounts,
+} from "./types";
 
-export type Deck = {
-  leader: string | null;
-  mainDeck: DeckEntry[];
-  extraDeck: DeckEntry[];
-};
+import type { PlayableCard } from "@/types/cards";
 
-export function getTotalCopies(deck: Deck, cardId: string): number {
+/* -----------------------------
+   Helpers
+----------------------------- */
+
+function getZoneKey(zone: "main" | "extra") {
+  return zone === "main" ? "mainDeck" : "extraDeck";
+}
+
+/* -----------------------------
+   Queries
+----------------------------- */
+
+export function getDeckCounts(deck: Deck) {
+  const main = deck.mainDeck.reduce(
+    (sum, c) => sum + c.count,
+    0
+  );
+
+  const extra = deck.extraDeck.reduce(
+    (sum, c) => sum + c.count,
+    0
+  );
+
+  return { main, extra };
+}
+
+export function getCardCounts(deck: Deck): CardCounts {
+  const counts: CardCounts = {};
+
+  for (const entry of deck.mainDeck) {
+    counts[entry.cardId] ??= {
+      main: 0,
+      extra: 0,
+    };
+
+    counts[entry.cardId].main = entry.count;
+  }
+
+  for (const entry of deck.extraDeck) {
+    counts[entry.cardId] ??= {
+      main: 0,
+      extra: 0,
+    };
+
+    counts[entry.cardId].extra = entry.count;
+  }
+
+  return counts;
+}
+
+export function getTotalCopies(deck: Deck, cardId: string) {
   let total = 0;
 
   if (deck.leader === cardId) {
     total += 1;
   }
 
-  for (const c of deck.mainDeck) {
-    if (c.cardId === cardId) total += c.count;
+  for (const entry of deck.mainDeck) {
+    if (entry.cardId === cardId) {
+      total += entry.count;
+    }
   }
 
-  for (const c of deck.extraDeck) {
-    if (c.cardId === cardId) total += c.count;
+  for (const entry of deck.extraDeck) {
+    if (entry.cardId === cardId) {
+      total += entry.count;
+    }
   }
 
   return total;
 }
 
-export function getMaxCopies(cardColors: number): number {
-  return cardColors === 1 || cardColors === 4 ? 1 : 2;
+export function getMaxCopies(card: PlayableCard) {
+  const n = card.colors.length;
+  return n === 1 || n === 4 ? 1 : 2;
 }
 
-export function addCard(
+/* -----------------------------
+   Core mutation helpers
+----------------------------- */
+
+function canAddCard(
   deck: Deck,
-  cardId: string,
+  card: PlayableCard,
+  zone: "main" | "extra"
+) {
+  const counts = getDeckCounts(deck);
+
+  if (zone === "main" && counts.main >= 20) return false;
+  if (zone === "extra" && counts.extra >= 5) return false;
+
+  if (getTotalCopies(deck, card.id) >= getMaxCopies(card)) {
+    return false;
+  }
+
+  return true;
+}
+
+/* -----------------------------
+   Mutations
+----------------------------- */
+
+export function incrementCard(
+  deck: Deck,
+  card: PlayableCard,
   zone: "main" | "extra"
 ): Deck {
-  const key = zone === "main" ? "mainDeck" : "extraDeck";
+  if (!canAddCard(deck, card, zone)) {
+    return deck;
+  }
 
-  const existing = deck[key].find((c) => c.cardId === cardId);
+  const key = getZoneKey(zone);
+  const list = deck[key];
+
+  const existing = list.find(
+    (c) => c.cardId === card.id
+  );
 
   if (existing) {
     return {
       ...deck,
-      [key]: deck[key].map((c) =>
-        c.cardId === cardId ? { ...c, count: c.count + 1 } : c
+      [key]: list.map((c) =>
+        c.cardId === card.id
+          ? { ...c, count: c.count + 1 }
+          : c
       ),
     };
   }
 
   return {
     ...deck,
-    [key]: [...deck[key], { cardId, count: 1 }],
+    [key]: [
+      ...list,
+      {
+        cardId: card.id,
+        count: 1,
+      },
+    ],
   };
 }
 
-export function removeCard(
+export function decrementCard(
   deck: Deck,
   cardId: string,
   zone: "main" | "extra"
 ): Deck {
-  const key = zone === "main" ? "mainDeck" : "extraDeck";
+  const key = getZoneKey(zone);
+  const list = deck[key];
 
   return {
     ...deck,
-    [key]: deck[key]
+    [key]: list
       .map((c) =>
-        c.cardId === cardId ? { ...c, count: c.count - 1 } : c
+        c.cardId === cardId
+          ? { ...c, count: c.count - 1 }
+          : c
       )
       .filter((c) => c.count > 0),
   };
@@ -79,9 +174,23 @@ export function setLeader(deck: Deck, cardId: string): Deck {
   };
 }
 
-export function getDeckCounts(deck: Deck) {
-  const main = deck.mainDeck.reduce((a, b) => a + b.count, 0);
-  const extra = deck.extraDeck.reduce((a, b) => a + b.count, 0);
+/* -----------------------------
+   High-level action
+----------------------------- */
 
-  return { main, extra };
+export function applySelection(
+  deck: Deck,
+  card: PlayableCard,
+  zone: Zone
+): Deck {
+  switch (zone) {
+    case "leader":
+      return setLeader(deck, card.id);
+
+    case "main":
+      return incrementCard(deck, card, "main");
+
+    case "extra":
+      return incrementCard(deck, card, "extra");
+  }
 }
