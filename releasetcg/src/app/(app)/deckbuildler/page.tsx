@@ -1,224 +1,109 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useCards } from "./hooks/useCards";
+import { useDeckBuilder } from "./hooks/useDeckBuilder";
+import { useCardFilters } from "./hooks/useCardFilters";
 
-import {
-  addCard,
-  removeCard,
-  setLeader,
-  getDeckCounts,
-} from "./deckUtils";
+import CardBrowser from "./components/CardBrowser";
+import DeckControls from "./components/DeckControls";
+import DeckPanel from "./components/DeckPanel";
+import PreviewPanel from "./components/PreviewPanel";
 
-type DeckEntry = {
-  cardId: string;
-  count: number;
-};
-
-type Deck = {
-  leader: string | null;
-  mainDeck: DeckEntry[];
-  extraDeck: DeckEntry[];
-};
+import DeckToolbar from "./components/DeckToolbar";
 
 export default function DeckBuilderPage() {
-  const [mounted, setMounted] = useState(false);
+  const { cards, loading } = useCards();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const {
+    // deck state
+    deck,
+    activeZone,
+    setActiveZone,
 
-  const [deck, setDeck] = useState<Deck>({
-    leader: null,
-    mainDeck: [],
-    extraDeck: [],
-  });
+    // derived cards
+    filteredCards,
+    hoveredCard,
+    leaderCard,
 
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+    // counts
+    cardCounts,
+    counts,
 
-  /**
-   * Mock cards (replace with Supabase later)
-   */
-  const cards = useMemo(
-    () => [
-      { id: "card-1", name: "Fire Dragon", colors: 2 },
-      { id: "card-2", name: "Ice Mage", colors: 1 },
-      { id: "card-3", name: "Phoenix Lord", colors: 4 },
-    ],
-    []
-  );
+    // deck lists
+    mainDeckCards,
+    extraDeckCards,
 
-  /**
-   * 🚨 ALL DECK LOGIC MOVED TO UTILS
-   */
-  const { main, extra } = useMemo(
-    () => getDeckCounts(deck),
-    [deck]
-  );
+    // actions
+    handleCardClick,
+    handleIncrementCard,
+    handleDecrementCard,
 
-  const leaderSelected = deck.leader !== null;
+    // hover
+    setHoveredCardId,
+  } = useDeckBuilder(cards);
 
-  const handleSetLeader = useCallback((cardId: string) => {
-    setDeck((prev) => setLeader(prev, cardId));
-  }, []);
+  // Browser filters (search, power, bulk, color...)
+  const {
+    filters,
+    setFilters,
+    filteredCards: browserCards,
+  } = useCardFilters(filteredCards);
 
-  const handleAddCard = useCallback(
-    (cardId: string, zone: "main" | "extra") => {
-      setDeck((prev) => addCard(prev, cardId, zone));
-    },
-    []
-  );
-
-  const handleRemoveCard = useCallback(
-    (cardId: string, zone: "main" | "extra") => {
-      setDeck((prev) => removeCard(prev, cardId, zone));
-    },
-    []
-  );
-
-  if (!mounted) {
+  if (loading) {
     return (
       <div className="p-4 text-sm text-muted-foreground">
-        Loading deck builder...
+        Loading cards...
       </div>
     );
   }
 
   return (
-    <div className="h-screen grid grid-cols-3 gap-4 p-4">
-      {/* LEFT: Card Browser */}
-      <div className="border rounded-lg p-3 overflow-auto">
-        <h2 className="font-bold mb-2">Available Cards</h2>
+    <div className="flex h-screen flex-col gap-3 p-4 overflow-hidden">
 
-        {!leaderSelected && (
-          <p className="text-sm text-muted-foreground mb-2">
-            Select a leader to unlock deck building
-          </p>
-        )}
+      {/* Deck mode selector */}
+      <DeckControls
+        deck={deck}
+        activeZone={activeZone}
+        setActiveZone={setActiveZone}
+        leaderCard={leaderCard}
+      />
 
-        <div className="space-y-2">
-          {cards.map((card) => (
-            <div
-              key={card.id}
-              className="border rounded p-2 cursor-pointer hover:bg-muted"
-              onClick={() => setSelectedCardId(card.id)}
-            >
-              <div className="font-medium">{card.name}</div>
+      {/* Main content */}
+      <div className="grid min-h-0 flex-1 grid-cols-[2fr_320px_1fr] gap-4">
 
-              <div className="flex gap-2 mt-2">
-                <button
-                  className="text-xs px-2 py-1 border rounded"
-                  disabled={!leaderSelected}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddCard(card.id, "main");
-                  }}
-                >
-                  + Main
-                </button>
+        {/* Left side */}
+        <div className="flex min-h-0 flex-col gap-3">
 
-                <button
-                  className="text-xs px-2 py-1 border rounded"
-                  disabled={!leaderSelected}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddCard(card.id, "extra");
-                  }}
-                >
-                  + Extra
-                </button>
+          <DeckToolbar
+            filters={filters}
+            setFilters={setFilters}
+          />
 
-                <button
-                  className="text-xs px-2 py-1 border rounded"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSetLeader(card.id);
-                  }}
-                >
-                  Set Leader
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* MIDDLE: Inspector */}
-      <div className="border rounded-lg p-3">
-        <h2 className="font-bold mb-2">Card Inspector</h2>
-
-        {selectedCardId ? (
-          <div>
-            <p className="text-lg font-semibold">{selectedCardId}</p>
-
-            <div className="mt-4 flex gap-2">
-              <button
-                className="border px-3 py-1 rounded"
-                disabled={!leaderSelected}
-                onClick={() => handleAddCard(selectedCardId, "main")}
-              >
-                Add to Main
-              </button>
-
-              <button
-                className="border px-3 py-1 rounded"
-                disabled={!leaderSelected}
-                onClick={() => handleAddCard(selectedCardId, "extra")}
-              >
-                Add to Extra
-              </button>
-            </div>
+          <div className="min-h-0 flex-1">
+            <CardBrowser
+              cards={browserCards}
+              cardCounts={cardCounts}
+              onHover={setHoveredCardId}
+              onClickCard={handleCardClick}
+            />
           </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Select a card to inspect
-          </p>
-        )}
-      </div>
 
-      {/* RIGHT: Deck */}
-      <div className="border rounded-lg p-3 overflow-auto">
-        <h2 className="font-bold mb-2">Deck</h2>
-
-        <div className="mb-4">
-          <p className="font-semibold">Leader</p>
-          <p className="text-sm text-muted-foreground">
-            {deck.leader ?? "None selected"}
-          </p>
         </div>
 
-        <div className="mb-4">
-          <p className="font-semibold">Main Deck ({main}/20)</p>
-          {deck.mainDeck.map((c) => (
-            <div key={c.cardId} className="flex justify-between text-sm">
-              <span>
-                {c.cardId} x{c.count}
-              </span>
-              <button
-                onClick={() => handleRemoveCard(c.cardId, "main")}
-                className="text-xs"
-              >
-                remove
-              </button>
-            </div>
-          ))}
-        </div>
+        {/* Hover preview */}
+        <PreviewPanel card={hoveredCard} />
 
-        <div>
-          <p className="font-semibold">Extra Deck ({extra}/5)</p>
-          {deck.extraDeck.map((c) => (
-            <div key={c.cardId} className="flex justify-between text-sm">
-              <span>
-                {c.cardId} x{c.count}
-              </span>
-              <button
-                onClick={() => handleRemoveCard(c.cardId, "extra")}
-                className="text-xs"
-              >
-                remove
-              </button>
-            </div>
-          ))}
-        </div>
+        {/* Current deck */}
+        <DeckPanel
+          deck={deck}
+          leaderCard={leaderCard}
+          mainDeckCards={mainDeckCards}
+          extraDeckCards={extraDeckCards}
+          counts={counts}
+          onIncrementCard={handleIncrementCard}
+          onDecrementCard={handleDecrementCard}
+        />
+
       </div>
     </div>
   );
