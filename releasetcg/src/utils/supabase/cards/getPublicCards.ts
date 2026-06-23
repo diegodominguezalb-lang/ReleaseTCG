@@ -1,8 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 
-import { CardDetails } from "@/types/cards";
+import {
+  DatabaseCard,
+  PlayableCard,
+} from "@/types/cards";
 
-export async function getPublicCards(): Promise<CardDetails[]> {
+import { toPlayableCard } from "@/lib/cards/cardMapper";
+
+export async function getPublicCards(): Promise<PlayableCard[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -31,5 +36,5 @@ export async function getPublicCards(): Promise<CardDetails[]> {
     return [];
   }
 
-  return data;
+  return (data as DatabaseCard[]).map(toPlayableCard);
 }

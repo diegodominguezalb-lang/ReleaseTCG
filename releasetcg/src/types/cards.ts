@@ -4,9 +4,36 @@ export type CardPool =
   | "beta"
   | "public";
 
-  export type DatabaseCard = {
-  id: number;
+export type CardCore = {
+  id: string;
+  name: string;
 
+  power: number;
+  bulk: number;
+
+  trait: string | null;
+  effect1: string | null;
+  effect2: string | null;
+
+  flavor_text: string | null;
+  description: string | null;
+
+  artist: string | null;
+  expansion: string | null;
+
+  image_url: string | null;
+};
+
+export type PlayableCard = CardCore & {
+  colors: string[];
+};
+
+/**
+ * Represents the complete row stored in Supabase.
+ * Extends Card with metadata only needed by the database/admin tools.
+ */
+export type DatabaseCard = {
+  id: string;
   name: string;
 
   power: number;
@@ -25,7 +52,6 @@ export type CardPool =
   description: string | null;
 
   artist: string | null;
-
   expansion: string | null;
 
   image_url: string | null;
@@ -33,7 +59,6 @@ export type CardPool =
   pool: CardPool;
 
   slug: string;
-
   version: number;
 
   created_at: string;
@@ -43,49 +68,19 @@ export type CardPool =
   updated_by: string | null;
 };
 
-export type CardDetails = {
-  id: string;
-
-  name: string;
-
-  image_url: string;
-
-  power: number;
-  bulk: number;
-
-  color1: string;
-  color2: string;
-  color3: string;
-  color4: string;
-
-  trait: string;
-
-  effect1: string;
-  effect2: string;
-
-  flavor_text: string;
-
-  description: string;
-
-  artist: string;
-
-  expansion: string;
+/**
+ * Lightweight representation for the admin table.
+ * Avoids loading every field unnecessarily.
+ */
+export type AdminCardSummary = CardCore & {
+  pool: CardPool;
+  palette: string[];
 };
 
-export type AdminCardSummary = {
-  id: string;
-
-  name: string;
-
-  power: number;
-  bulk: number;
-
-  palette: string[];
-
-  trait: string;
-
-  effect1: string;
-  effect2: string;
-
-  pool: CardPool;
+export type CardFilterValues = {
+  search: string;
+  pool?: string;
+  power: string;
+  bulk: string;
+  color: string;
 };

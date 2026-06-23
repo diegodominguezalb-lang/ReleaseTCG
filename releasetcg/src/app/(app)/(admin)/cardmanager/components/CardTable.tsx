@@ -2,7 +2,7 @@
 import { AdminCardSummary } from "@/types/cards";
 
 import { useRouter } from "next/navigation";
-import { PaletteChips } from "./PaletteChips";
+import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
 
 export function CardTable({
   cards,
@@ -48,7 +48,10 @@ export function CardTable({
                 </td>
 
                 <td className="p-3">
-                    <PaletteChips palette={card.palette} />
+                    <PaletteChips 
+                    palette={card.palette} 
+                    size="sm"
+                />    
                 </td>
             </tr>
             ))}

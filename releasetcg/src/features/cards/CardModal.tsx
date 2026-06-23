@@ -7,12 +7,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { CardDetails } from "@/types/cards";
+import { PlayableCard } from "@/types/cards";
 
 import { CardViewer } from "./viewer/CardViewer";
 
 type Props = {
-  card: CardDetails | null;
+  card: PlayableCard | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };

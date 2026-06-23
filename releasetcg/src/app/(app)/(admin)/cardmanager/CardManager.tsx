@@ -2,20 +2,23 @@
 
 import { useMemo, useState } from "react";
 
-import { AdminCardSummary } from "@/types/cards";
+import type {
+  AdminCardSummary,
+  CardFilterValues,
+} from "@/types/cards";
 
 import { CardManagerHeader } from "./components/CardManagerHeader";
-import { CardFilters } from "./components/CardFilters";
+import { CardFilters } from "@/app/(app)/components/cards/CardFilters";
 import { CardTable } from "./components/CardTable";
 
-import { filterCards, CardFilters as FiltersType } from "./utils/filterCards";
+import { filterCards } from "@/lib/cards/filterCards";
 
 type Props = {
   cards: AdminCardSummary[];
 };
 
 export function CardManager({ cards }: Props) {
-  const [filters, setFilters] = useState<FiltersType>({
+  const [filters, setFilters] = useState<CardFilterValues>({
     search: "",
     pool: "all",
     power: "all",
@@ -23,19 +26,10 @@ export function CardManager({ cards }: Props) {
     color: "all",
   });
 
-  const filteredCards = useMemo(() => {
-    return filterCards(cards, filters);
-  }, [cards, filters]);
-
-  const counts = useMemo(() => {
-    return {
-      all: cards.length,
-      draft: cards.filter((c) => c.pool === "draft").length,
-      private: cards.filter((c) => c.pool === "private").length,
-      beta: cards.filter((c) => c.pool === "beta").length,
-      public: cards.filter((c) => c.pool === "public").length,
-    };
-  }, [cards]);
+  const filteredCards = useMemo(
+    () => filterCards(cards, filters),
+    [cards, filters]
+  );
 
   return (
     <div className="space-y-6">
@@ -44,7 +38,12 @@ export function CardManager({ cards }: Props) {
       <CardFilters
         filters={filters}
         setFilters={setFilters}
-        counts={counts}
+        options={{
+          showPool: true,
+          showPower: true,
+          showBulk: true,
+          showColor: true,
+        }}
       />
 
       <p className="text-sm text-muted-foreground">
