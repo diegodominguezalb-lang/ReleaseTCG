@@ -1,10 +1,10 @@
-import { CardDetails } from "@/types/cards";
+import { PlayableCard } from "@/types/cards";
 
 import { GalleryCard } from "./GalleryCard";
 
 type Props = {
-  cards: CardDetails[];
-  onCardClick: (card: CardDetails) => void;
+  cards: PlayableCard[];
+  onCardClick: (card: PlayableCard) => void;
 };
 
 export function GalleryGrid({

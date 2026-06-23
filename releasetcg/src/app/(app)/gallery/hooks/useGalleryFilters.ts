@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { CardDetails } from "@/types/cards";
+import { PlayableCard } from "@/types/cards";
 
 import {
   GalleryFilterState,
@@ -11,7 +11,7 @@ import {
 } from "../types";
 
 export function useGalleryFilters(
-  cards: CardDetails[]
+  cards: PlayableCard[]
 ) {
 
   const [filters, setFilters] =
@@ -84,12 +84,7 @@ export function useGalleryFilters(
 
       if (
         filters.color &&
-        ![
-          card.color1,
-          card.color2,
-          card.color3,
-          card.color4,
-        ].includes(filters.color)
+        !card.colors.includes(filters.color)
       ) {
         return false;
       }
@@ -115,10 +110,9 @@ export function useGalleryFilters(
           break;
 
         case "expansion":
-          comparison =
-            a.expansion.localeCompare(
-              b.expansion
-            );
+          comparison = (a.expansion ?? "").localeCompare(
+            b.expansion ?? ""
+          );
           break;
 
         default:

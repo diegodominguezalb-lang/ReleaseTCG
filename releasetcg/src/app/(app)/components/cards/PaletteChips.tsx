@@ -13,11 +13,20 @@ const colorMap: Record<
   Pink: { label: "P", bg: "bg-pink-500" },
 };
 
+type Props = {
+  palette: string[];
+  size?: "sm" | "md";
+};
+
 export function PaletteChips({
   palette,
-}: {
-  palette: string[];
-}) {
+  size = "sm",
+}: Props) {
+  const classes =
+    size === "sm"
+      ? "h-5 w-5 text-[10px]"
+      : "h-6 w-6 text-xs";
+
   return (
     <div className="flex flex-wrap gap-1">
       {palette.map((color) => {
@@ -26,7 +35,7 @@ export function PaletteChips({
         return (
           <span
             key={color}
-            className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${chip.bg}`}
+            className={`flex items-center justify-center rounded-full font-bold text-white ${chip.bg} ${classes}`}
           >
             {chip.label}
           </span>
