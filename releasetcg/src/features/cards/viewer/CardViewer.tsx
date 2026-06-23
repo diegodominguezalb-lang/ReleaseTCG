@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { CardDetails } from "@/types/cards";
+import { PlayableCard } from "@/types/cards";
 
 import { CardImage } from "./components/CardImage";
 import { CardHeader } from "./components/CardHeader";
@@ -10,7 +10,7 @@ import { CardFlavorText } from "./components/CardFlavorText";
 import { CardMetadata } from "./components/CardMetadata";
 
 type Props = {
-  card: CardDetails;
+  card: PlayableCard;
   children?: ReactNode;
 };
 
@@ -18,12 +18,6 @@ export function CardViewer({
   card,
   children,
 }: Props) {
-  const colors = [
-    card.color1,
-    card.color2,
-    card.color3,
-    card.color4,
-  ].filter(Boolean);
 
   return (
     <div className="grid h-full md:grid-cols-[360px_minmax(0,1fr)] bg-gray-200">
@@ -48,14 +42,13 @@ export function CardViewer({
           <CardStats
             power={card.power}
             bulk={card.bulk}
-            colors={colors}
+            colors={card.colors}
           />
 
           <CardEffects
             trait={card.trait}
             effect1={card.effect1}
             effect2={card.effect2}
-            flavor_text={card.flavor_text}
           />
 
           <CardFlavorText

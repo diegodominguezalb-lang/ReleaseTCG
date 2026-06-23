@@ -1,4 +1,4 @@
-import { PaletteChips } from "@/app/(app)/(admin)/cardmanager/components/PaletteChips";
+import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
 
 type Props = {
   power: number;
@@ -52,7 +52,10 @@ export function CardStats({
               Colorless
             </span>
           ) : (
-            <PaletteChips palette={colors} />
+            <PaletteChips 
+              palette={colors} 
+              size="sm"
+            />
           )}
         </div>
 

@@ -1,6 +1,6 @@
 type Props = {
-  artist: string;
-  expansion: string;
+  artist: string | null;
+  expansion: string | null;
 };
 
 export function CardMetadata({

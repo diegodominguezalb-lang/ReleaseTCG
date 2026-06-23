@@ -1,15 +1,13 @@
 type Props = {
-  trait: string;
-  effect1: string;
-  effect2: string;
-  flavor_text: string;
+  trait: string | null;
+  effect1: string | null;
+  effect2: string | null;
 };
 
 export function CardEffects({
   trait,
   effect1,
   effect2,
-  flavor_text,
 }: Props) {
   return (
     <section className="space-y-2">
