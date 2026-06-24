@@ -9,10 +9,7 @@ import type { PlayableCard } from "@/types/cards";
 import { toDeckExport } from "@/utils/decks/toDeckExport";
 import { validateDeck } from "@/utils/decks/validateDeck";
 
-type GetValidatedDeckResult = {
-  deck: DeckExport | null;
-  validation: DeckValidationResult;
-};
+import { GetValidatedDeckResult } from "@/types/decks"
 
 export function getValidatedDeck(
   deck: Deck,

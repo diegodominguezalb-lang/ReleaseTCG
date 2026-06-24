@@ -10,6 +10,8 @@ import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
 import { StatChips } from "@/app/(app)/components/cards/StatChips";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+
 type Props = {
   deck: Deck;
 
@@ -28,6 +30,8 @@ type Props = {
 
   onSave: () => void;
   onExport: () => void;
+  onImport: () => void;
+  onClear: () => void;
 };
 
 export default function DeckPanel({
@@ -40,6 +44,8 @@ export default function DeckPanel({
   onDecrementCard,
   onSave,
   onExport,
+  onImport,
+  onClear,
 }: Props) {
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border overflow-hidden">
@@ -256,21 +262,37 @@ export default function DeckPanel({
       </div>
 
       {/* FOOTER (fixed) */}
-      <div className="shrink-0 border-t p-4 space-y-2">
-        <button
+      <div className="shrink-0 border-t p-4">
+        <div className="grid grid-cols-3 gap-2">
+            <button
             onClick={onSave}
             disabled={!deck.leader || counts.main !== 20}
-            className="
-                w-full rounded border p-2
-                disabled:opacity-50
-            "
+            className="rounded border p-2 disabled:opacity-50"
             >
-            Save Deck
-        </button>
+                Save
+            </button>
 
-        <button onClick={onExport} className="w-full rounded border p-2">
-          Export Deck
-        </button>
+            <button
+            onClick={onExport}
+            className="rounded border p-2"
+            >
+                Export
+            </button>
+
+            <button
+            onClick={onImport}
+            className="rounded border p-2"
+            >
+                Import
+            </button>
+
+            <button
+            onClick={onClear}
+            className="rounded border p-2"
+            >
+                Clear
+            </button>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import type { DeckExport } from "@/types/decks";
-import { checksum } from "./checksum";
 import { compressToEncodedURIComponent } from "lz-string";
 
 /**
@@ -12,12 +11,4 @@ export function encodeDeck(
   return compressToEncodedURIComponent(
     JSON.stringify(deck)
   );
-}
-
-export function encodeDeckCode(
-  deck: DeckExport
-): string {
-  const payload = encodeDeck(deck);
-
-  return `${payload}.${checksum(payload)}`;
 }

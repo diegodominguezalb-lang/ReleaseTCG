@@ -1,11 +1,9 @@
 import type {
-  Deck,
   DeckExport,
   DeckValidationResult,
 } from "@/types/decks";
 
 import type { PlayableCard } from "@/types/cards";
-import { toDeckExport } from "@/utils/decks/toDeckExport";
 
 function getCardMap(cards: PlayableCard[]) {
   return new Map(cards.map((card) => [card.id, card]));
@@ -164,30 +162,6 @@ function validateColorIdentity(
   }
 
   return errors;
-}
-
-export function getValidatedDeck(
-  deck: Deck,
-  cards: PlayableCard[]
-): DeckExport | null {
-  if (!deck.leader) {
-    alert("A leader is required.");
-    return null;
-  }
-
-  const exported = toDeckExport(deck);
-
-  const validation = validateDeck(
-    exported,
-    cards
-  );
-
-  if (!validation.valid) {
-    alert(validation.errors.join("\n"));
-    return null;
-  }
-
-  return exported;
 }
 
 export function validateDeck(

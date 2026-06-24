@@ -2,9 +2,17 @@ export * from "./checksum";
 
 export * from "./encodeDeck";
 export * from "./decodeDeck";
+export * from "./encodeDeckCode";
+export * from "./decodeDeckCode";
 
 export * from "./exportDeck";
 export * from "./importDeck";
 
-export * from "./validateDeck";
+export * from "./getImportedDeck";
 export * from "./getValidatedDeck";
+
+export * from "./toDeck";
+export * from "./toDeckExport";
+export * from "./toSavedDeck";
+
+export * from "./validateDeck";

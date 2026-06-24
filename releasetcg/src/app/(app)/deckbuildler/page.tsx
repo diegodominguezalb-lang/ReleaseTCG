@@ -9,28 +9,24 @@ import CardBrowser from "./components/CardBrowser";
 import DeckControls from "./components/DeckControls";
 import DeckPanel from "./components/DeckPanel";
 import PreviewPanel from "./components/PreviewPanel";
-
 import DeckToolbar from "./components/DeckToolbar";
 
 export default function DeckBuilderPage() {
   const { cards, loading } = useCards();
 
   const {
-    // deck state
+    // state
     deck,
     activeZone,
     setActiveZone,
 
-    // derived cards
+    // derived
     filteredCards,
     hoveredCard,
     leaderCard,
 
-    // counts
     cardCounts,
     counts,
-
-    // deck lists
     mainDeckCards,
     extraDeckCards,
 
@@ -38,12 +34,12 @@ export default function DeckBuilderPage() {
     handleCardClick,
     handleIncrementCard,
     handleDecrementCard,
-
-    // hover
     setHoveredCardId,
+
+    // important: controlled deck replacement
+    loadDeck,
   } = useDeckBuilder(cards);
 
-  // Browser filters (search, power, bulk, color...)
   const {
     filters,
     setFilters,
@@ -53,9 +49,12 @@ export default function DeckBuilderPage() {
   const {
     handleSave,
     handleExport,
+    handleImport,
+    handleClear,
   } = useDeckOperations({
     deck,
     cards,
+    loadDeck,
   });
 
   if (loading) {
@@ -99,10 +98,10 @@ export default function DeckBuilderPage() {
 
         </div>
 
-        {/* Hover preview */}
+        {/* Preview */}
         <PreviewPanel card={hoveredCard} />
 
-        {/* Current deck */}
+        {/* Deck panel */}
         <DeckPanel
           deck={deck}
           leaderCard={leaderCard}
@@ -113,6 +112,8 @@ export default function DeckBuilderPage() {
           onDecrementCard={handleDecrementCard}
           onSave={handleSave}
           onExport={handleExport}
+          onImport={handleImport}
+          onClear={handleClear}
         />
 
       </div>

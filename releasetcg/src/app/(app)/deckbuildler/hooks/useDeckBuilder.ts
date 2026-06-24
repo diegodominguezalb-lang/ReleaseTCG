@@ -4,7 +4,6 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { PlayableCard } from "@/types/cards";
 import type { Deck } from "@/types/decks";
-
 import type { Zone } from "../types";
 
 import {
@@ -15,13 +14,17 @@ import {
 } from "../deckUtils";
 
 /* -------------------------
-   Helpers
+   Types
 ------------------------- */
 
 export type DeckCard = {
   card: PlayableCard;
   count: number;
 };
+
+/* -------------------------
+   Hook
+------------------------- */
 
 export function useDeckBuilder(cards: PlayableCard[]) {
   /* -------------------------
@@ -35,7 +38,6 @@ export function useDeckBuilder(cards: PlayableCard[]) {
   });
 
   const [activeZone, setActiveZone] = useState<Zone>("leader");
-
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
 
   /* -------------------------
@@ -43,28 +45,24 @@ export function useDeckBuilder(cards: PlayableCard[]) {
   ------------------------- */
 
   const cardMap = useMemo(() => {
-    return Object.fromEntries(
-      cards.map((card) => [card.id, card])
-    ) as Record<string, PlayableCard>;
+    return new Map(cards.map((c) => [c.id, c]));
   }, [cards]);
 
   /* -------------------------
-     DERIVED CARDS
+     DERIVED: CARDS
   ------------------------- */
 
   const leaderCard = useMemo(() => {
     if (!deck.leader) return null;
-    return cardMap[deck.leader] ?? null;
+    return cardMap.get(deck.leader) ?? null;
   }, [deck.leader, cardMap]);
 
   const hoveredCard = useMemo(() => {
     if (!hoveredCardId) return null;
-    return cardMap[hoveredCardId] ?? null;
+    return cardMap.get(hoveredCardId) ?? null;
   }, [hoveredCardId, cardMap]);
 
-  const leaderColors = useMemo(() => {
-    return leaderCard?.colors ?? [];
-  }, [leaderCard]);
+  const leaderColors = leaderCard?.colors ?? [];
 
   /* -------------------------
      FILTERED POOL
@@ -83,21 +81,20 @@ export function useDeckBuilder(cards: PlayableCard[]) {
   }, [cards, activeZone, leaderCard, leaderColors]);
 
   /* -------------------------
-     DERIVED STATS
-  ------------------------- */
+     STATS
+------------------------- */
 
   const counts = useMemo(() => getDeckCounts(deck), [deck]);
-
   const cardCounts = useMemo(() => getCardCounts(deck), [deck]);
 
   /* -------------------------
-     DERIVED DECK ARRAYS (IMPORTANT)
+     DECK ARRAYS
   ------------------------- */
 
-  const mainDeckCards: DeckCard[] = useMemo(() => {
+  const mainDeckCards = useMemo(() => {
     return deck.mainDeck
       .map((entry) => {
-        const card = cardMap[entry.cardId];
+        const card = cardMap.get(entry.cardId);
         if (!card) return null;
 
         return { card, count: entry.count };
@@ -105,10 +102,10 @@ export function useDeckBuilder(cards: PlayableCard[]) {
       .filter(Boolean) as DeckCard[];
   }, [deck.mainDeck, cardMap]);
 
-  const extraDeckCards: DeckCard[] = useMemo(() => {
+  const extraDeckCards = useMemo(() => {
     return deck.extraDeck
       .map((entry) => {
-        const card = cardMap[entry.cardId];
+        const card = cardMap.get(entry.cardId);
         if (!card) return null;
 
         return { card, count: entry.count };
@@ -124,7 +121,6 @@ export function useDeckBuilder(cards: PlayableCard[]) {
     (card: PlayableCard) => {
       setDeck((prev) => applySelection(prev, card, activeZone));
 
-      // auto switch after leader pick
       if (activeZone === "leader") {
         setActiveZone("main");
       }
@@ -134,7 +130,7 @@ export function useDeckBuilder(cards: PlayableCard[]) {
 
   const handleIncrementCard = useCallback(
     (cardId: string, zone: "main" | "extra") => {
-      const card = cardMap[cardId];
+      const card = cardMap.get(cardId);
       if (!card) return;
 
       setDeck((prev) => applySelection(prev, card, zone));
@@ -148,6 +144,10 @@ export function useDeckBuilder(cards: PlayableCard[]) {
     },
     []
   );
+
+  const loadDeck = useCallback((nextDeck: Deck) => {
+    setDeck(nextDeck);
+  }, []);
 
   /* -------------------------
      RETURN
@@ -170,7 +170,6 @@ export function useDeckBuilder(cards: PlayableCard[]) {
     filteredCards,
     counts,
     cardCounts,
-    cardMap,
 
     mainDeckCards,
     extraDeckCards,
@@ -179,5 +178,7 @@ export function useDeckBuilder(cards: PlayableCard[]) {
     handleCardClick,
     handleIncrementCard,
     handleDecrementCard,
+
+    loadDeck
   };
 }

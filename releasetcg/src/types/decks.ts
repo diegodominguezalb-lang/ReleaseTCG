@@ -47,3 +47,13 @@ export type DeckValidationResult = {
   valid: boolean;
   errors: string[];
 };
+
+export type GetValidatedDeckResult = {
+  deck: DeckExport | null;
+  validation: DeckValidationResult;
+};
+
+export type GetImportedDeckResult = {
+  deck: Deck | null;
+  validation: DeckValidationResult;
+};
