@@ -3,7 +3,9 @@
 import { useCallback, useMemo, useState } from "react";
 
 import type { PlayableCard } from "@/types/cards";
-import type { Deck, Zone } from "../types";
+import type { Deck } from "@/types/decks";
+
+import type { Zone } from "../types";
 
 import {
   applySelection,

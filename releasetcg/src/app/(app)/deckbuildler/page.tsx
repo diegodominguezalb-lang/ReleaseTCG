@@ -3,6 +3,7 @@
 import { useCards } from "./hooks/useCards";
 import { useDeckBuilder } from "./hooks/useDeckBuilder";
 import { useCardFilters } from "./hooks/useCardFilters";
+import { useDeckOperations } from "./hooks/useDeckOperations";
 
 import CardBrowser from "./components/CardBrowser";
 import DeckControls from "./components/DeckControls";
@@ -48,6 +49,14 @@ export default function DeckBuilderPage() {
     setFilters,
     filteredCards: browserCards,
   } = useCardFilters(filteredCards);
+
+  const {
+    handleSave,
+    handleExport,
+  } = useDeckOperations({
+    deck,
+    cards,
+  });
 
   if (loading) {
     return (
@@ -102,6 +111,8 @@ export default function DeckBuilderPage() {
           counts={counts}
           onIncrementCard={handleIncrementCard}
           onDecrementCard={handleDecrementCard}
+          onSave={handleSave}
+          onExport={handleExport}
         />
 
       </div>

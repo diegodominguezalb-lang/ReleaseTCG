@@ -1,10 +1,10 @@
 import type {
-  Deck,
   Zone,
   CardCounts,
 } from "./types";
 
 import type { PlayableCard } from "@/types/cards";
+import type { Deck } from "@/types/decks";
 
 /* -----------------------------
    Helpers

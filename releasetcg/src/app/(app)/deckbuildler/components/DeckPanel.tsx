@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 
-import type { DeckCard, Deck } from "../types";
+import type { DeckCard } from "../types";
 import type { PlayableCard } from "@/types/cards";
+import type { Deck } from "@/types/decks";
 
 import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
@@ -24,6 +25,9 @@ type Props = {
 
   onIncrementCard: (cardId: string, zone: "main" | "extra") => void;
   onDecrementCard: (cardId: string, zone: "main" | "extra") => void;
+
+  onSave: () => void;
+  onExport: () => void;
 };
 
 export default function DeckPanel({
@@ -34,6 +38,8 @@ export default function DeckPanel({
   counts,
   onIncrementCard,
   onDecrementCard,
+  onSave,
+  onExport,
 }: Props) {
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border overflow-hidden">
@@ -80,13 +86,11 @@ export default function DeckPanel({
                     size="sm"
                 />
 
-                <div className="flex gap-2">
-                        <StatChips
-                            power={leaderCard.power}
-                            bulk={leaderCard.bulk}
-                            size="sm"
-                        />
-                    </div>
+                <StatChips
+                    power={leaderCard.power}
+                    bulk={leaderCard.bulk}
+                    size="sm"
+                />
               </div>
             </div>
           ) : (
@@ -133,13 +137,11 @@ export default function DeckPanel({
                         size="sm"
                     />
 
-                    <div className="flex gap-2">
-                        <StatChips
-                            power={card.power}
-                            bulk={card.bulk}
-                            size="sm"
-                        />
-                    </div>
+                     <StatChips
+                        power={card.power}
+                        bulk={card.bulk}
+                        size="sm"
+                    />
                   </div>
 
                   <div className="flex flex-col items-center gap-1">
@@ -202,32 +204,48 @@ export default function DeckPanel({
                     />
                   </div>
 
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 space-y-1">
                     <div className="truncate text-sm font-medium">
-                      {card.name}
+                        {card.name}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {card.power} Power • {card.bulk} Bulk
-                    </div>
+
+                    <PaletteChips
+                        palette={card.colors}
+                        size="sm"
+                    />
+
+                    <StatChips
+                        power={card.power}
+                        bulk={card.bulk}
+                        size="sm"
+                    />
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     <button
-                      className="h-7 w-7 rounded border"
-                      onClick={() => onDecrementCard(card.id, "extra")}
+                        className="
+                        flex h-7 w-7 items-center justify-center
+                        rounded border
+                        hover:bg-muted
+                        "
+                        onClick={() => onIncrementCard(card.id, "main")}
                     >
-                      −
+                        +
                     </button>
 
-                    <span className="w-5 text-center text-sm">
-                      {count}
+                    <span className="text-sm font-semibold">
+                        {count}
                     </span>
 
                     <button
-                      className="h-7 w-7 rounded border"
-                      onClick={() => onIncrementCard(card.id, "extra")}
+                        className="
+                        flex h-7 w-7 items-center justify-center
+                        rounded border
+                        hover:bg-muted
+                        "
+                        onClick={() => onDecrementCard(card.id, "main")}
                     >
-                      +
+                        −
                     </button>
                   </div>
                 </div>
@@ -239,11 +257,18 @@ export default function DeckPanel({
 
       {/* FOOTER (fixed) */}
       <div className="shrink-0 border-t p-4 space-y-2">
-        <button disabled className="w-full rounded border p-2">
-          Save Deck
+        <button
+            onClick={onSave}
+            disabled={!deck.leader || counts.main !== 20}
+            className="
+                w-full rounded border p-2
+                disabled:opacity-50
+            "
+            >
+            Save Deck
         </button>
 
-        <button disabled className="w-full rounded border p-2">
+        <button onClick={onExport} className="w-full rounded border p-2">
           Export Deck
         </button>
       </div>

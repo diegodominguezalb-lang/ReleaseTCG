@@ -1,14 +1,8 @@
-import type {
-  DeckExport,
-  SavedDeck,
-} from "@/types/decks";
+import type { Deck } from "@/types/decks";
+import { toDeckExport } from "./toDeckExport";
+import { encodeDeckCode } from "./encodeDeck";
 
-export function exportDeck(
-  deck: SavedDeck
-): DeckExport {
-  return {
-    leader: deck.leader,
-    mainDeck: deck.mainDeck,
-    extraDeck: deck.extraDeck,
-  };
+export function exportDeck(deck: Deck): string {
+  const normalized = toDeckExport(deck);
+  return encodeDeckCode(normalized);
 }

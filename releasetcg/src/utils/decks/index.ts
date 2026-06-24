@@ -7,3 +7,4 @@ export * from "./exportDeck";
 export * from "./importDeck";
 
 export * from "./validateDeck";
+export * from "./getValidatedDeck";

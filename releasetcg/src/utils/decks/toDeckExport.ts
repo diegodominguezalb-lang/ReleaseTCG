@@ -1,13 +1,11 @@
-import type { Deck } from "@/app/(app)/deckbuildler/types";
+import type { Deck } from "@/types/decks";
 import type { DeckExport } from "@/types/decks";
 
-export function toDeckExport(deck: Deck): DeckExport {
-  if (!deck.leader) {
-    throw new Error("Deck has no leader.");
-  }
-
+export function toDeckExport(
+    deck: Deck
+): DeckExport {
   return {
-    leader: deck.leader,
+    leader: deck.leader!,
     mainDeck: deck.mainDeck,
     extraDeck: deck.extraDeck,
   };

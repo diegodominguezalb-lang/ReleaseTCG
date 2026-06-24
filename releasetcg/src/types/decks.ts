@@ -3,6 +3,12 @@ export type DeckEntry = {
   count: number;
 };
 
+export type Deck = {
+  leader: string | null;
+  mainDeck: DeckEntry[];
+  extraDeck: DeckEntry[];
+};
+
 export type SavedDeck = {
   id: string;
   ownerId: string;
