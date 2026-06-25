@@ -4,6 +4,7 @@ export type DeckEntry = {
 };
 
 export type Deck = {
+  id?: string;
   name: string;
 
   leader: string | null;
@@ -23,20 +24,20 @@ export type SavedDeck = {
   mainDeck: DeckEntry[];
   extraDeck: DeckEntry[];
 
-
   createdAt: string;
   updatedAt: string;
 };
 
 export type DeckSummary = {
-    id: string;
+  id: string;
+  name: string;
 
-    name: string;
+  leaderId: string | null;
+  leaderName: string | null;
+  leaderImage: string | null;
 
-    leader: string;
-
-    updatedAt: string;
-}
+  updatedAt: string;
+};
 
 export type DeckExport = {
     leader: string;

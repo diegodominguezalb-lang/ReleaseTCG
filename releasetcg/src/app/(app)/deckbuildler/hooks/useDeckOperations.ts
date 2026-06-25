@@ -10,6 +10,7 @@ import {
   exportDeck,
   getImportedDeck,
   getValidatedDeck,
+  toDeck,
 } from "@/utils/decks";
 
 type Props = {
@@ -68,15 +69,10 @@ export function useDeckOperations({
    * Eventually this will POST to your API route.
    */
   const handleSave = useCallback(async () => {
-    console.log("inside handleSave");
-    const exportedDeck = getExportableDeck();
-
-    if (!exportedDeck) {
-        return;
-    }
-
     try {
-        await saveDeck(exportedDeck);
+        const savedDeck = await saveDeck(deck);
+
+        loadDeck(toDeck(savedDeck));
 
         alert("Deck saved!");
     } catch (error) {
@@ -86,7 +82,7 @@ export function useDeckOperations({
             : "Unable to save deck."
         );
     }
-  }, [getExportableDeck]);
+  }, [deck, loadDeck]);
 
   /**
    * Export

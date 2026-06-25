@@ -1,10 +1,11 @@
 import type { Deck } from "@/types/decks";
 
-export async function saveDeck(
+export async function updateDeck(
+  id: string,
   deck: Deck
 ): Promise<Deck> {
-  const response = await fetch("/api/decks", {
-    method: "POST",
+  const response = await fetch(`/api/decks/${id}`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
@@ -12,7 +13,7 @@ export async function saveDeck(
   });
 
   if (!response.ok) {
-    throw new Error("Failed to save deck.");
+    throw new Error("Failed to update deck.");
   }
 
   return response.json();

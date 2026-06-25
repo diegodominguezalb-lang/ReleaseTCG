@@ -17,3 +17,14 @@ export * from "./toDeckExport";
 export * from "./toSavedDeck";
 
 export * from "./validateDeck";
+
+
+export * from "./saveDeck"
+export * from "./deleteDeck"
+export * from "./updateDeck"
+
+export * from "./loadDeck"
+export * from "./listDecks"
+
+export * from "./toDatabaseDeck";
+
