@@ -5,6 +5,7 @@ export * from "./decodeDeck";
 export * from "./encodeDeckCode";
 export * from "./decodeDeckCode";
 
+export * from "./saveDeck";
 export * from "./exportDeck";
 export * from "./importDeck";
 

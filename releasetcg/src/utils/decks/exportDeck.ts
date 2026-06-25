@@ -1,8 +1,6 @@
-import type { Deck } from "@/types/decks";
-import { toDeckExport } from "./toDeckExport";
+import type { DeckExport } from "@/types/decks";
 import { encodeDeckCode } from "./encodeDeckCode";
 
-export function exportDeck(deck: Deck): string {
-  const normalized = toDeckExport(deck);
-  return encodeDeckCode(normalized);
+export function exportDeck(deck: DeckExport): string {
+  return encodeDeckCode(deck);
 }

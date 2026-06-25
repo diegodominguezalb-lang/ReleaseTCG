@@ -1,26 +1,28 @@
 import type { PlayableCard } from "@/types/cards";
-
-import { importDeck } from "./importDeck";
+import { decodeDeckCode } from "./decodeDeckCode";
+import { toDeck } from "./toDeck";
 import { validateDeck } from "./validateDeck";
 
-import { GetImportedDeckResult } from "@/types/decks"
+import type { GetImportedDeckResult } from "@/types/decks";
 
 export function getImportedDeck(
   code: string,
   cards: PlayableCard[]
 ): GetImportedDeckResult {
   try {
-    const imported = importDeck(code);
+    const exported = decodeDeckCode(code);
 
-    const validation = validateDeck(
-      imported,
-      cards
-    );
+    const validation = validateDeck(exported, cards);
+
+    if (!validation.valid) {
+      return {
+        deck: null,
+        validation,
+      };
+    }
 
     return {
-      deck: validation.valid
-        ? imported
-        : null,
+      deck: toDeck(exported),
       validation,
     };
   } catch (error) {

@@ -11,7 +11,7 @@ import DeckPanel from "./components/DeckPanel";
 import PreviewPanel from "./components/PreviewPanel";
 import DeckToolbar from "./components/DeckToolbar";
 
-export default function DeckBuilderPage() {
+export default function Page() {
   const { cards, loading } = useCards();
 
   const {
@@ -31,6 +31,7 @@ export default function DeckBuilderPage() {
     extraDeckCards,
 
     // actions
+    handleDeckNameChange,
     handleCardClick,
     handleIncrementCard,
     handleDecrementCard,
@@ -104,6 +105,7 @@ export default function DeckBuilderPage() {
         {/* Deck panel */}
         <DeckPanel
           deck={deck}
+          onDeckNameChange={handleDeckNameChange}
           leaderCard={leaderCard}
           mainDeckCards={mainDeckCards}
           extraDeckCards={extraDeckCards}

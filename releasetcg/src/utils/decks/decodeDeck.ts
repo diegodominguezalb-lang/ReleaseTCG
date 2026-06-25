@@ -12,5 +12,5 @@ export function decodeDeck(
     throw new Error("Invalid deck code.");
   }
 
-  return JSON.parse(json);
+  return JSON.parse(json) as DeckExport;
 }

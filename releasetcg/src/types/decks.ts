@@ -4,7 +4,10 @@ export type DeckEntry = {
 };
 
 export type Deck = {
+  name: string;
+
   leader: string | null;
+
   mainDeck: DeckEntry[];
   extraDeck: DeckEntry[];
 };

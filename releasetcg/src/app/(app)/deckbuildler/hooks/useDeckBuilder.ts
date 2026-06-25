@@ -32,6 +32,7 @@ export function useDeckBuilder(cards: PlayableCard[]) {
   ------------------------- */
 
   const [deck, setDeck] = useState<Deck>({
+    name: "",
     leader: null,
     mainDeck: [],
     extraDeck: [],
@@ -117,6 +118,13 @@ export function useDeckBuilder(cards: PlayableCard[]) {
      ACTIONS
   ------------------------- */
 
+  const setDeckName = useCallback((name: string) => {
+    setDeck(prev => ({
+        ...prev,
+        name,
+    }));
+  }, []);
+
   const handleCardClick = useCallback(
     (card: PlayableCard) => {
       setDeck((prev) => applySelection(prev, card, activeZone));
@@ -145,6 +153,16 @@ export function useDeckBuilder(cards: PlayableCard[]) {
     []
   );
 
+  const handleDeckNameChange = useCallback(
+    (name: string) => {
+        setDeck((prev) => ({
+        ...prev,
+        name,
+        }));
+    },
+    []
+  );
+
   const loadDeck = useCallback((nextDeck: Deck) => {
     setDeck(nextDeck);
   }, []);
@@ -156,6 +174,7 @@ export function useDeckBuilder(cards: PlayableCard[]) {
   return {
     // state
     deck,
+    setDeckName,
     activeZone,
     hoveredCardId,
 
@@ -178,7 +197,8 @@ export function useDeckBuilder(cards: PlayableCard[]) {
     handleCardClick,
     handleIncrementCard,
     handleDecrementCard,
+    handleDeckNameChange,
 
-    loadDeck
+    loadDeck,
   };
 }

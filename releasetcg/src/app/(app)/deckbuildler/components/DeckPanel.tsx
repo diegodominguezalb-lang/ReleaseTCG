@@ -10,10 +10,10 @@ import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
 import { StatChips } from "@/app/(app)/components/cards/StatChips";
 
-import { HugeiconsIcon } from "@hugeicons/react";
-
 type Props = {
   deck: Deck;
+
+  onDeckNameChange: (name: string) => void;
 
   leaderCard: PlayableCard | null;
 
@@ -36,6 +36,7 @@ type Props = {
 
 export default function DeckPanel({
   deck,
+  onDeckNameChange,
   leaderCard,
   mainDeckCards,
   extraDeckCards,
@@ -50,13 +51,34 @@ export default function DeckPanel({
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border overflow-hidden">
 
-      {/* HEADER (fixed) */}
-      <div className="shrink-0 border-b p-4">
-        <h2 className="text-xl font-bold">Deck</h2>
+      {/* HEADER */}
+      <div className="shrink-0 space-y-3 border-b p-4">
+        <div>
+            <input
+                type="text"
+                value={deck.name ?? ""}
+                onChange={(e) =>
+                onDeckNameChange(e.target.value)
+                }
+                placeholder="Deck"
+                maxLength={50}
+                className="
+                w-full
+                rounded-md
+                border
+                bg-background
+                px-3
+                py-2
+                text-sm
+                outline-none
+                focus:ring-2
+                "
+            />
+            <p className="text-sm text-muted-foreground">
+            {counts.main + counts.extra + (deck.leader ? 1 : 0)} cards
+            </p>
+        </div>
 
-        <p className="text-sm text-muted-foreground">
-          {counts.main + counts.extra + (deck.leader ? 1 : 0)} cards
-        </p>
       </div>
 
       {/* SCROLLABLE BODY */}
@@ -234,7 +256,7 @@ export default function DeckPanel({
                         rounded border
                         hover:bg-muted
                         "
-                        onClick={() => onIncrementCard(card.id, "main")}
+                        onClick={() => onIncrementCard(card.id, "extra")}
                     >
                         +
                     </button>
@@ -249,7 +271,7 @@ export default function DeckPanel({
                         rounded border
                         hover:bg-muted
                         "
-                        onClick={() => onDecrementCard(card.id, "main")}
+                        onClick={() => onDecrementCard(card.id, "extra")}
                     >
                         −
                     </button>
@@ -261,9 +283,9 @@ export default function DeckPanel({
         </section>
       </div>
 
-      {/* FOOTER (fixed) */}
+      {/* FOOTER */}
       <div className="shrink-0 border-t p-4">
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
             <button
             onClick={onSave}
             disabled={!deck.leader || counts.main !== 20}

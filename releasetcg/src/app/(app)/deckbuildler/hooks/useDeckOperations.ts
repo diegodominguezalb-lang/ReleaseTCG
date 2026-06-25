@@ -6,6 +6,7 @@ import type { Deck } from "@/types/decks";
 import type { PlayableCard } from "@/types/cards";
 
 import {
+  saveDeck,
   exportDeck,
   getImportedDeck,
   getValidatedDeck,
@@ -67,16 +68,24 @@ export function useDeckOperations({
    * Eventually this will POST to your API route.
    */
   const handleSave = useCallback(async () => {
+    console.log("inside handleSave");
     const exportedDeck = getExportableDeck();
 
     if (!exportedDeck) {
-      return;
+        return;
     }
 
-    console.log("Saving deck...", exportedDeck);
+    try {
+        await saveDeck(exportedDeck);
 
-    // TODO:
-    // await saveDeck(exportedDeck)
+        alert("Deck saved!");
+    } catch (error) {
+        alert(
+        error instanceof Error
+            ? error.message
+            : "Unable to save deck."
+        );
+    }
   }, [getExportableDeck]);
 
   /**
@@ -85,6 +94,7 @@ export function useDeckOperations({
    * Copies an encoded deck string to the clipboard.
    */
   const handleExport = useCallback(async () => {
+    console.log("inside handleExport");
     const exportedDeck = getExportableDeck();
 
     if (!exportedDeck) {
@@ -108,6 +118,7 @@ export function useDeckOperations({
    * Loads a deck from a deck code.
    */
   const handleImport = useCallback(async () => {
+    console.log("inside handleImport");
     const code = prompt("Paste a deck code");
 
     if (!code) {
@@ -122,24 +133,24 @@ export function useDeckOperations({
 
     loadDeck(importedDeck);
 
-    alert("Deck imported!");
   }, [getImportableDeck, loadDeck]);
 
   /**
    * Clear
    */
   const handleClear = useCallback(() => {
+    console.log("inside handleClear");
     const confirmed = confirm("Clear current deck?");
 
     if (!confirmed) return;
 
     loadDeck({
+        name: "",
         leader: null,
         mainDeck: [],
         extraDeck: [],
     });
 
-    alert("Deck cleared.");
   }, [loadDeck]);
 
   return {

@@ -10,6 +10,7 @@ export function toDeck(
   deck: DeckExport
 ): Deck {
   return {
+    name: "Imported Deck",
     leader: deck.leader,
     mainDeck: deck.mainDeck,
     extraDeck: deck.extraDeck,
