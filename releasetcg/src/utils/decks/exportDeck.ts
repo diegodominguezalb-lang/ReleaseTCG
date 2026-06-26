@@ -1,14 +1,6 @@
-import type {
-  DeckExport,
-  SavedDeck,
-} from "@/types/decks";
+import type { DeckExport } from "@/types/decks";
+import { encodeDeckCode } from "./encodeDeckCode";
 
-export function exportDeck(
-  deck: SavedDeck
-): DeckExport {
-  return {
-    leader: deck.leader,
-    mainDeck: deck.mainDeck,
-    extraDeck: deck.extraDeck,
-  };
+export function exportDeck(deck: DeckExport): string {
+  return encodeDeckCode(deck);
 }

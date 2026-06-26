@@ -3,6 +3,16 @@ export type DeckEntry = {
   count: number;
 };
 
+export type Deck = {
+  id?: string;
+  name: string;
+
+  leader: string | null;
+
+  mainDeck: DeckEntry[];
+  extraDeck: DeckEntry[];
+};
+
 export type SavedDeck = {
   id: string;
   ownerId: string;
@@ -14,20 +24,20 @@ export type SavedDeck = {
   mainDeck: DeckEntry[];
   extraDeck: DeckEntry[];
 
-
   createdAt: string;
   updatedAt: string;
 };
 
 export type DeckSummary = {
-    id: string;
+  id: string;
+  name: string;
 
-    name: string;
+  leaderId: string | null;
+  leaderName: string | null;
+  leaderImage: string | null;
 
-    leader: string;
-
-    updatedAt: string;
-}
+  updatedAt: string;
+};
 
 export type DeckExport = {
     leader: string;
@@ -40,4 +50,9 @@ export type DeckExport = {
 export type DeckValidationResult = {
   valid: boolean;
   errors: string[];
+};  
+
+export type GetImportedDeckResult = {
+  deck: Deck | null;
+  validation: DeckValidationResult;
 };

@@ -1,7 +1,7 @@
 "use client";
 
-import type { Deck } from "../types";
 import type { PlayableCard } from "@/types/cards";
+import type { Deck } from "@/types/decks";
 
 type Zone = "leader" | "main" | "extra";
 
