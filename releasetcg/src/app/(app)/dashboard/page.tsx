@@ -3,6 +3,9 @@ import { Box } from "./components/box";
 import { EditProfileButton } from "./components/EditProfileButton";
 import { redirect } from "next/navigation";
 
+import DeckGrid from "./components/DeckGrid";
+import { listDecks } from "@/lib/decks";
+
 export default async function Page() {
   const supabase = await createClient();
 
@@ -19,6 +22,11 @@ export default async function Page() {
     .select("*")
     .eq("id", user.id)
     .single();
+
+  const decks = await listDecks(
+    supabase,
+    user.id
+  );
 
   const wins = profile?.wins ?? 0;
   const losses = profile?.losses ?? 0;
@@ -41,6 +49,8 @@ export default async function Page() {
           <p>Winrate: {winrate}%</p>
         </div>
       </Box>
+
+      <DeckGrid decks={decks} />
     </>
   );
 }

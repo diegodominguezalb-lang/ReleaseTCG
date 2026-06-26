@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import {
   updateDeck,
   deleteDeck,
+  getDeck,
 } from "@/lib/decks";
 
 import type { Deck } from "@/types/decks";
@@ -91,6 +92,41 @@ export async function DELETE(
     return NextResponse.json(
       { error: "Failed to delete deck." },
       { status: 500 }
+    );
+  }
+}
+
+export async function GET(
+  request: Request,
+  { params }: RouteContext
+) {
+  const { id } = await params;
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const deck = await getDeck(
+      supabase,
+      user.id,
+      id
+    );
+
+    return NextResponse.json(deck);
+  } catch {
+    return NextResponse.json(
+      { error: "Deck not found." },
+      { status: 404 }
     );
   }
 }

@@ -1,103 +1,80 @@
 "use client";
 
 import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 import type { Deck } from "@/types/decks";
 import type { PlayableCard } from "@/types/cards";
 
 import {
   saveDeck,
+  updateDeck,
   exportDeck,
   getImportedDeck,
-  getValidatedDeck,
-  toDeck,
+  validateDeck,
+  toDeckExport,
 } from "@/utils/decks";
 
 type Props = {
   deck: Deck;
   cards: PlayableCard[];
   loadDeck: (deck: Deck) => void;
+  deckId?: string;
 };
 
 export function useDeckOperations({
   deck,
   cards,
   loadDeck,
+  deckId,
 }: Props) {
-  /**
-   * Returns a validated DeckExport or null.
-   * Displays validation errors to the user.
-   */
-  const getExportableDeck = useCallback(() => {
-    const {
-      deck: exportedDeck,
-      validation,
-    } = getValidatedDeck(deck, cards);
-
-    if (!validation.valid || !exportedDeck) {
-      alert(validation.errors.join("\n"));
-      return null;
-    }
-
-    return exportedDeck;
-  }, [deck, cards]);
-
-  /**
-   * Returns an imported Deck or null.
-   * Displays validation errors to the user.
-   */
-  const getImportableDeck = useCallback(
-    (code: string) => {
-      const {
-        deck: importedDeck,
-        validation,
-      } = getImportedDeck(code, cards);
-
-      if (!validation.valid || !importedDeck) {
-        alert(validation.errors.join("\n"));
-        return null;
-      }
-
-      return importedDeck;
-    },
-    [cards]
-  );
-
+  const router = useRouter();
   /**
    * Save
-   *
-   * Eventually this will POST to your API route.
    */
   const handleSave = useCallback(async () => {
-    try {
-        const savedDeck = await saveDeck(deck);
+    const validation = validateDeck(toDeckExport(deck), cards);
 
-        loadDeck(toDeck(savedDeck));
-
-        alert("Deck saved!");
-    } catch (error) {
-        alert(
-        error instanceof Error
-            ? error.message
-            : "Unable to save deck."
-        );
-    }
-  }, [deck, loadDeck]);
-
-  /**
-   * Export
-   *
-   * Copies an encoded deck string to the clipboard.
-   */
-  const handleExport = useCallback(async () => {
-    console.log("inside handleExport");
-    const exportedDeck = getExportableDeck();
-
-    if (!exportedDeck) {
+    if (!validation.valid) {
+      alert(validation.errors.join("\n"));
       return;
     }
 
-    const code = exportDeck(exportedDeck);
+    try {
+      const savedDeck = deckId
+        ? await updateDeck(deckId, deck)
+        : await saveDeck(deck);
+
+      loadDeck(savedDeck);
+
+      if (!deckId && savedDeck.id) {
+          router.replace(`/deckbuilder/${savedDeck.id}`);
+      }
+
+      alert("Deck saved!");
+    } catch (error) {
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Unable to save deck."
+      );
+    }
+  }, [deck, cards, deckId, loadDeck, router]);
+
+  /**
+   * Export
+   */
+  const handleExport = useCallback(async () => {
+    const validation = validateDeck(toDeckExport(deck), cards);
+
+    if (!validation.valid) {
+      alert(validation.errors.join("\n"));
+      return;
+    }
+
+    const code = exportDeck(
+      toDeckExport(deck)
+    );
 
     try {
       await navigator.clipboard.writeText(code);
@@ -106,47 +83,45 @@ export function useDeckOperations({
     } catch {
       alert(code);
     }
-  }, [getExportableDeck]);
+  }, [deck, cards]);
 
   /**
    * Import
-   *
-   * Loads a deck from a deck code.
    */
-  const handleImport = useCallback(async () => {
-    console.log("inside handleImport");
+  const handleImport = useCallback(() => {
     const code = prompt("Paste a deck code");
 
     if (!code) {
       return;
     }
 
-    const importedDeck = getImportableDeck(code);
+    const {
+      deck: importedDeck,
+      validation,
+    } = getImportedDeck(code, cards);
 
-    if (!importedDeck) {
+    if (!validation.valid || !importedDeck) {
+      alert(validation.errors.join("\n"));
       return;
     }
 
     loadDeck(importedDeck);
-
-  }, [getImportableDeck, loadDeck]);
+  }, [cards, loadDeck]);
 
   /**
    * Clear
    */
   const handleClear = useCallback(() => {
-    console.log("inside handleClear");
-    const confirmed = confirm("Clear current deck?");
-
-    if (!confirmed) return;
+    if (!confirm("Clear current deck?")) {
+      return;
+    }
 
     loadDeck({
-        name: "",
-        leader: null,
-        mainDeck: [],
-        extraDeck: [],
+      name: "",
+      leader: null,
+      mainDeck: [],
+      extraDeck: [],
     });
-
   }, [loadDeck]);
 
   return {

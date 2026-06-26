@@ -10,7 +10,7 @@ export * from "./exportDeck";
 export * from "./importDeck";
 
 export * from "./getImportedDeck";
-export * from "./getValidatedDeck";
+export * from "./getDeck";
 
 export * from "./toDeck";
 export * from "./toDeckExport";

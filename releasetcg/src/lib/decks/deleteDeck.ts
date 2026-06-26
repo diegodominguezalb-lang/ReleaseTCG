@@ -4,9 +4,15 @@ export async function deleteDeck(
   supabase: SupabaseClient,
   ownerId: string,
   deckId: string
-) {
-  // Delete from decks.
-  // deck_cards disappear via CASCADE.
+): Promise<void> {
+  // 1. Verify ownership + delete deck in one step
+  const { error } = await supabase
+    .from("decks")
+    .delete()
+    .eq("id", deckId)
+    .eq("owner_id", ownerId);
 
-  throw new Error("Not implemented.");
+  if (error) {
+    throw error;
+  }
 }
