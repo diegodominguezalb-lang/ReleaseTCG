@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 
-import type { DeckCard, Deck } from "../types";
+import type { DeckCard } from "../types";
 import type { PlayableCard } from "@/types/cards";
+import type { Deck } from "@/types/decks";
 
 import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
@@ -11,6 +12,8 @@ import { StatChips } from "@/app/(app)/components/cards/StatChips";
 
 type Props = {
   deck: Deck;
+
+  onDeckNameChange: (name: string) => void;
 
   leaderCard: PlayableCard | null;
 
@@ -24,27 +27,58 @@ type Props = {
 
   onIncrementCard: (cardId: string, zone: "main" | "extra") => void;
   onDecrementCard: (cardId: string, zone: "main" | "extra") => void;
+
+  onSave: () => void;
+  onExport: () => void;
+  onImport: () => void;
+  onClear: () => void;
 };
 
 export default function DeckPanel({
   deck,
+  onDeckNameChange,
   leaderCard,
   mainDeckCards,
   extraDeckCards,
   counts,
   onIncrementCard,
   onDecrementCard,
+  onSave,
+  onExport,
+  onImport,
+  onClear,
 }: Props) {
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border overflow-hidden">
 
-      {/* HEADER (fixed) */}
-      <div className="shrink-0 border-b p-4">
-        <h2 className="text-xl font-bold">Deck</h2>
+      {/* HEADER */}
+      <div className="shrink-0 space-y-3 border-b p-4">
+        <div>
+            <input
+                type="text"
+                value={deck.name ?? ""}
+                onChange={(e) =>
+                onDeckNameChange(e.target.value)
+                }
+                placeholder="Deck"
+                maxLength={50}
+                className="
+                w-full
+                rounded-md
+                border
+                bg-background
+                px-3
+                py-2
+                text-sm
+                outline-none
+                focus:ring-2
+                "
+            />
+            <p className="text-sm text-muted-foreground">
+            {counts.main + counts.extra + (deck.leader ? 1 : 0)} cards
+            </p>
+        </div>
 
-        <p className="text-sm text-muted-foreground">
-          {counts.main + counts.extra + (deck.leader ? 1 : 0)} cards
-        </p>
       </div>
 
       {/* SCROLLABLE BODY */}
@@ -80,13 +114,11 @@ export default function DeckPanel({
                     size="sm"
                 />
 
-                <div className="flex gap-2">
-                        <StatChips
-                            power={leaderCard.power}
-                            bulk={leaderCard.bulk}
-                            size="sm"
-                        />
-                    </div>
+                <StatChips
+                    power={leaderCard.power}
+                    bulk={leaderCard.bulk}
+                    size="sm"
+                />
               </div>
             </div>
           ) : (
@@ -133,13 +165,11 @@ export default function DeckPanel({
                         size="sm"
                     />
 
-                    <div className="flex gap-2">
-                        <StatChips
-                            power={card.power}
-                            bulk={card.bulk}
-                            size="sm"
-                        />
-                    </div>
+                     <StatChips
+                        power={card.power}
+                        bulk={card.bulk}
+                        size="sm"
+                    />
                   </div>
 
                   <div className="flex flex-col items-center gap-1">
@@ -202,32 +232,48 @@ export default function DeckPanel({
                     />
                   </div>
 
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 space-y-1">
                     <div className="truncate text-sm font-medium">
-                      {card.name}
+                        {card.name}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {card.power} Power • {card.bulk} Bulk
-                    </div>
+
+                    <PaletteChips
+                        palette={card.colors}
+                        size="sm"
+                    />
+
+                    <StatChips
+                        power={card.power}
+                        bulk={card.bulk}
+                        size="sm"
+                    />
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
                     <button
-                      className="h-7 w-7 rounded border"
-                      onClick={() => onDecrementCard(card.id, "extra")}
+                        className="
+                        flex h-7 w-7 items-center justify-center
+                        rounded border
+                        hover:bg-muted
+                        "
+                        onClick={() => onIncrementCard(card.id, "extra")}
                     >
-                      −
+                        +
                     </button>
 
-                    <span className="w-5 text-center text-sm">
-                      {count}
+                    <span className="text-sm font-semibold">
+                        {count}
                     </span>
 
                     <button
-                      className="h-7 w-7 rounded border"
-                      onClick={() => onIncrementCard(card.id, "extra")}
+                        className="
+                        flex h-7 w-7 items-center justify-center
+                        rounded border
+                        hover:bg-muted
+                        "
+                        onClick={() => onDecrementCard(card.id, "extra")}
                     >
-                      +
+                        −
                     </button>
                   </div>
                 </div>
@@ -237,15 +283,38 @@ export default function DeckPanel({
         </section>
       </div>
 
-      {/* FOOTER (fixed) */}
-      <div className="shrink-0 border-t p-4 space-y-2">
-        <button disabled className="w-full rounded border p-2">
-          Save Deck
-        </button>
+      {/* FOOTER */}
+      <div className="shrink-0 border-t p-4">
+        <div className="grid grid-cols-4 gap-2">
+            <button
+            onClick={onSave}
+            disabled={!deck.leader || counts.main !== 20}
+            className="rounded border p-2 disabled:opacity-50"
+            >
+                Save
+            </button>
 
-        <button disabled className="w-full rounded border p-2">
-          Export Deck
-        </button>
+            <button
+            onClick={onExport}
+            className="rounded border p-2"
+            >
+                Export
+            </button>
+
+            <button
+            onClick={onImport}
+            className="rounded border p-2"
+            >
+                Import
+            </button>
+
+            <button
+            onClick={onClear}
+            className="rounded border p-2"
+            >
+                Clear
+            </button>
+        </div>
       </div>
     </div>
   );

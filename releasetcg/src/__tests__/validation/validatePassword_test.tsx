@@ -1,4 +1,4 @@
-import { validatePassword } from "@/utils/validation/validatePassword";
+import { validatePassword } from "@/utils/profile/validation/validatePassword";
 
 describe("validatePassword", () => {
   it("rejects short passwords", () => {

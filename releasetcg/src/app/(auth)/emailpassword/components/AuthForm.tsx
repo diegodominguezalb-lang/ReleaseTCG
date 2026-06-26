@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { validatePassword } from "@/utils/validation/validatePassword";
+import { validatePassword } from "@/utils/profile/validation/validatePassword";
 
 export default function AuthForm({
   supabase,

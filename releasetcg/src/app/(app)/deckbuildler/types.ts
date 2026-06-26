@@ -1,17 +1,7 @@
 import type { PlayableCard } from "@/types/cards";
+import type { DeckEntry } from "@/types/decks";
 
 export type Zone = "leader" | "main" | "extra";
-
-export type DeckEntry = {
-  cardId: string;
-  count: number;
-};
-
-export type Deck = {
-  leader: string | null;
-  mainDeck: DeckEntry[];
-  extraDeck: DeckEntry[];
-};
 
 export type CardCounts = Record<
   string,
