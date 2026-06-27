@@ -57,7 +57,7 @@ const data = {
         },
         {
           title: "Community Decks",
-          url: "/community-decks",
+          url: "/community",
         },
       ],
     },
