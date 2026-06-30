@@ -45,11 +45,11 @@ export default function CommunityPage() {
 
       {/* Community Feed */}
       <div
-className="
-  grid
-  gap-4
-  [grid-template-columns:repeat(auto-fill,minmax(240px,1fr))]
-"
+        className="
+        grid
+        gap-4
+        [grid-template-columns:repeat(auto-fill,minmax(240px,1fr))]
+        "
       >
         <CommunityDeckGrid />
       </div>
