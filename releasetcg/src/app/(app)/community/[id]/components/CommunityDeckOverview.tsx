@@ -7,6 +7,8 @@ import CommunityDeckSection, {
 import CardPreviewPopup from "./CardPreviewPopup";
 
 type Props = {
+  deckTitle: string;
+  author: string;
   leader: PlayableCard | null;
 
   mainDeck: DisplayCard[];
@@ -25,6 +27,8 @@ type Props = {
 };
 
 export default function CommunityDeckOverview({
+  deckTitle,
+  author,
   leader,
   mainDeck,
   extraDeck,
@@ -39,21 +43,34 @@ export default function CommunityDeckOverview({
       <div className="space-y-4 rounded-xl border bg-card p-5">
 
         {/* Leader */}
-        <section className="rounded-lg border-2 border-amber-500/70 bg-amber-500/5 p-4">
+        <section className="rounded-lg border-2 p-4">
+            <div className="flex gap-4">
 
-          <CommunityDeckSection
-            cards={
-              leader
-                ? [{ card: leader, count: 1 }]
-                : []
-            }
-            setHoveredCardId={setHoveredCardId}
-            setHoverAnchor={setHoverAnchor}
-          />
+                <CommunityDeckSection
+                    cards={
+                    leader
+                        ? [{ card: leader, count: 1 }]
+                        : []
+                    }
+                    setHoveredCardId={setHoveredCardId}
+                    setHoverAnchor={setHoverAnchor}
+                />
+            
+                <div className="flex flex-col justify-center">
+
+                    <h2 className="text-2xl font-bold">
+                        {deckTitle}
+                    </h2>
+
+                    <p className="text-muted-foreground">
+                        by {author}
+                    </p>
+                </div>
+            </div>
         </section>
 
         {/* Extra */}
-        <section className="rounded-lg border-2 border-sky-500/70 bg-sky-500/5 p-4">
+        <section className="rounded-lg border-2 p-4">
           <CommunityDeckSection
             cards={extraDeck}
             setHoveredCardId={setHoveredCardId}

@@ -8,12 +8,28 @@ import { getCommunityDeck } from "@/utils/community";
 import { useCards } from "@/app/(app)/deckbuildler/hooks/useCards";
 import { useCommunityDeck } from "../hooks/useCommunityDeck";
 
-import CommunityGuide from "./CommunityGuide";
+import CommunityGuide from "./CommunityGuide/CommunityGuide";
 import CommunityDeckOverview from "./CommunityDeckOverview";
 
 type Props = {
   deckId: string;
 };
+
+function handleEdit() {
+  console.log("Edit");
+}
+
+function handleDelete() {
+  console.log("Delete");
+}
+
+function handleExportCode() {
+  console.log("Export Code");
+}
+
+function handleExportImage() {
+  console.log("Export Image");
+}
 
 export default function CommunityDeckPage({
   deckId,
@@ -80,6 +96,8 @@ export default function CommunityDeckPage({
 
         <div className="border-4 border-yellow-500">
           <CommunityDeckOverview
+            deckTitle={deck.title}
+            author={deck.author}
             leader={leaderCard}
             mainDeck={mainDeckCards}
             extraDeck={extraDeckCards}
