@@ -39,25 +39,27 @@ export default function CommunityCardChip({
         setHoverAnchor(null);
       }}
     >
-      <Image
-        src={getCardImageUrl(card.image_url)}
-        alt={card.name}
-        width={80}
-        height={112}
-        className="block rounded-lg border transition-transform hover:scale-105"
-      />
+      <div className="relative w-20">
+        <Image
+          src={getCardImageUrl(card.image_url)}
+          alt={card.name}
+          width={80}
+          height={112}
+          className="block rounded-lg border transition-transform hover:scale-105"
+        />
 
-      {count > 1 && (
-        <div
-          className="absolute z-10 flex h-6 min-w-6 items-center justify-center rounded-full bg-black/80 px-2 text-xs font-semibold text-white"
-        style={{
-          right: 4,
-          bottom: 4,
-        }}
-        >
-          ×{count}
-        </div>
-      )}
+        {count > 1 && (
+          <div
+            className="absolute z-10 flex h-6 min-w-6 items-center justify-center rounded-full bg-black/80 px-2 text-xs font-semibold text-white"
+            style={{
+              right: 2,
+              bottom: 2,
+            }}
+          >
+            ×{count}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

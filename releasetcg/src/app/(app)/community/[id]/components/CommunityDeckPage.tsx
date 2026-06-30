@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { CommunityDeck } from "@/types/community";
 import { getCommunityDeck } from "@/utils/community";
 
 import { useCards } from "@/app/(app)/deckbuildler/hooks/useCards";
 import { useCommunityDeck } from "../hooks/useCommunityDeck";
+import { useCommunityDeckActions } from "../hooks/useCommunityDeckActions";
 
 import CommunityGuide from "./CommunityGuide/CommunityGuide";
 import CommunityDeckOverview from "./CommunityDeckOverview";
@@ -14,22 +15,6 @@ import CommunityDeckOverview from "./CommunityDeckOverview";
 type Props = {
   deckId: string;
 };
-
-function handleEdit() {
-  console.log("Edit");
-}
-
-function handleDelete() {
-  console.log("Delete");
-}
-
-function handleExportCode() {
-  console.log("Export Code");
-}
-
-function handleExportImage() {
-  console.log("Export Image");
-}
 
 export default function CommunityDeckPage({
   deckId,
@@ -42,6 +27,9 @@ export default function CommunityDeckPage({
 
   const [hoverAnchor, setHoverAnchor] =
     useState<DOMRect | null>(null);
+
+  const deckOverviewRef =
+    useRef<HTMLDivElement>(null);
 
   const {
     cards,
@@ -75,6 +63,18 @@ export default function CommunityDeckPage({
       ? cardMap.get(hoveredCardId) ?? null
       : null;
 
+  const {
+    handleSaveDescription,
+    handleDelete,
+    handleExportCode,
+    handleExportImage,
+  } = useCommunityDeckActions({
+    deck,
+    setDeck,
+    cards,
+    deckOverviewRef,
+  });
+
   if (cardsLoading || !deck) {
     return (
       <div className="p-6">
@@ -86,15 +86,18 @@ export default function CommunityDeckPage({
   return (
     <div className="mx-auto max-w-7xl p-6">
       <div className="grid grid-cols-2 gap-8">
-        <div className="border-4 border-green-500">
-          <CommunityGuide
-            title={deck.title}
-            author={deck.author}
-            description={deck.description}
-          />
-        </div>
 
-        <div className="border-4 border-yellow-500">
+        <CommunityGuide
+          title={deck.title}
+          author={deck.author}
+          description={deck.description}
+          onSaveDescription={handleSaveDescription}
+          onDelete={handleDelete}
+          onExportCode={handleExportCode}
+          onExportImage={handleExportImage}
+        />
+
+        <div ref={deckOverviewRef}>
           <CommunityDeckOverview
             deckTitle={deck.title}
             author={deck.author}
@@ -107,7 +110,6 @@ export default function CommunityDeckPage({
             setHoverAnchor={setHoverAnchor}
           />
         </div>
-        
 
       </div>
     </div>

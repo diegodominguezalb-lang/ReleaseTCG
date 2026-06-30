@@ -4,6 +4,8 @@ import CommunityDeckSection, {
   DisplayCard,
 } from "./CommunityDeckSection";
 
+import CommunityDeckHeader from "./CommunityDeckHeader";
+
 import CardPreviewPopup from "./CardPreviewPopup";
 
 type Props = {
@@ -40,37 +42,24 @@ export default function CommunityDeckOverview({
   return (
     <div className="relative">
 
-      <div className="space-y-4 rounded-xl border bg-card p-5">
+      <div className="space-y-2 rounded-xl border bg-card p-4">
 
         {/* Leader */}
-        <section className="rounded-lg border-2 p-4">
+        <section className="rounded-lg border-2 p-3">
             <div className="flex gap-4">
 
-                <CommunityDeckSection
-                    cards={
-                    leader
-                        ? [{ card: leader, count: 1 }]
-                        : []
-                    }
+                <CommunityDeckHeader
+                    deckName={deckTitle}
+                    author={author}
+                    leader={leader}
                     setHoveredCardId={setHoveredCardId}
                     setHoverAnchor={setHoverAnchor}
                 />
-            
-                <div className="flex flex-col justify-center">
-
-                    <h2 className="text-2xl font-bold">
-                        {deckTitle}
-                    </h2>
-
-                    <p className="text-muted-foreground">
-                        by {author}
-                    </p>
-                </div>
             </div>
         </section>
 
         {/* Extra */}
-        <section className="rounded-lg border-2 p-4">
+        <section className="rounded-lg border-2 p-3">
           <CommunityDeckSection
             cards={extraDeck}
             setHoveredCardId={setHoveredCardId}
@@ -79,7 +68,7 @@ export default function CommunityDeckOverview({
         </section>
 
         {/* Main */}
-        <section className="rounded-lg border-2 p-4">
+        <section className="rounded-lg border-2 p-3">
           <CommunityDeckSection
             cards={mainDeck}
             setHoveredCardId={setHoveredCardId}

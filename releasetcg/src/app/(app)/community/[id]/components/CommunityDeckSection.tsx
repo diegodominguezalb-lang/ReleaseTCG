@@ -26,7 +26,7 @@ export default function CommunityDeckSection({
 }: Props) {
   return (
     <section>
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-5 gap-2">
         {cards.map(({ card, count }) => (
           <CommunityCardChip
             key={card.id}
