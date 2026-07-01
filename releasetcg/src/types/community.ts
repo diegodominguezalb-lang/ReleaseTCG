@@ -1,5 +1,23 @@
 import { Deck } from "./decks";
 
+export type CommunityDeckRow = {
+  id: string;
+
+  owner_id: string;
+
+  title: string;
+  description: string;
+
+  deck: Deck;
+
+  leader_id: string | null;
+
+  is_public: boolean;
+
+  created_at: string;
+  updated_at: string;
+};
+
 export type CommunityDeckSummary = {
   id: string;
 
@@ -39,3 +57,8 @@ export type CommunityDeck = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type CommunityFilter =
+  | "newest"
+  | "popular"
+  | "mine";

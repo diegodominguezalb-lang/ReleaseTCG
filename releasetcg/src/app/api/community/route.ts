@@ -52,26 +52,22 @@ export async function POST(
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = await createClient();
 
-  try {
-    const decks = await listCommunityDecks(
-      supabase
-    );
+  const { searchParams } = new URL(request.url);
 
-    return NextResponse.json(decks);
-  } catch (err) {
-    console.error(err);
+  const search = searchParams.get("search") ?? "";
+  const filter = (searchParams.get("filter") ?? "newest") as
+    | "newest"
+    | "popular"
+    | "mine";
 
-    return NextResponse.json(
-      {
-        error:
-          "Failed to load community decks.",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
+  const decks = await listCommunityDecks({
+    supabase,
+    search,
+    filter,
+  });
+
+  return NextResponse.json(decks);
 }

@@ -1,54 +1,30 @@
-"use client";
+import { CommunityDeckSummary }  from "@/types/community"
 
-import { useEffect, useState } from "react";
+import CommunityDeckTile from "./CommunityDeckTile"
 
-import type { CommunityDeckSummary } from "@/types/community";
+type Props = {
+  decks: CommunityDeckSummary[];
+  loading: boolean;
+};
 
-import { listCommunityDecks } from "@/utils/community";
-
-import CommunityDeckTile from "./CommunityDeckTile";
-
-export default function CommunityDeckGrid() {
-  const [decks, setDecks] = useState<
-    CommunityDeckSummary[]
-  >([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const data =
-          await listCommunityDecks();
-
-        setDecks(data);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-  }, []);
-
+export default function CommunityDeckGrid({
+  decks,
+  loading,
+}: Props) {
   if (loading) {
-    return (
-      <div className="text-muted-foreground">
-        Loading...
-      </div>
-    );
+    return <div>Loading...</div>;
   }
 
-  if (decks.length === 0) {
+  if (!decks.length) {
     return (
       <div className="text-muted-foreground">
-        No published decks yet.
+        No decks found.
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+    <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {decks.map((deck) => (
         <CommunityDeckTile
           key={deck.id}

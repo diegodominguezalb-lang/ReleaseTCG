@@ -26,17 +26,17 @@ export default function CommunityDeckTile({
           hover:shadow-lg
         "
       >
-        <div className="overflow-hidden rounded-t-xl">
+        <div className="relative h-60 w-full overflow-hidden">
             {deck.leaderImage ? (
                 <Image
                 src={getCardImageUrl(deck.leaderImage)}
                 alt={deck.leaderName ?? deck.title}
-                width={400}
-                height={225}
-                className="h-28 w-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-contain"
                 />
             ) : (
-                <div className="flex h-20 items-center justify-center bg-muted text-sm text-muted-foreground">
+                <div className="flex h-full items-center justify-center bg-muted text-sm text-muted-foreground">
                 No Leader
                 </div>
             )}
