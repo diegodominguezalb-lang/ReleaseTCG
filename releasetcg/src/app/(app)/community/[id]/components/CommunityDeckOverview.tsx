@@ -6,7 +6,7 @@ import CommunityDeckSection, {
 
 import CommunityDeckHeader from "./CommunityDeckHeader";
 
-import CardPreviewPopup from "./CardPreviewPopup";
+import CardPreviewPopup from "@/app/(app)/components/cards/CardPreviewPopup";
 
 type Props = {
   deckTitle: string;

@@ -1,9 +1,14 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import {
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 import type { PlayableCard } from "@/types/cards";
 import type { Deck } from "@/types/decks";
+
 import type { Zone } from "../types";
 
 import {
@@ -13,191 +18,272 @@ import {
   getDeckCounts,
 } from "../deckUtils";
 
-/* -------------------------
-   Types
-------------------------- */
-
 export type DeckCard = {
   card: PlayableCard;
   count: number;
 };
 
-/* -------------------------
-   Hook
-------------------------- */
+export function useDeckBuilder(
+  cards: PlayableCard[]
+) {
+  const [deck, setDeck] =
+    useState<Deck>({
+      name: "",
+      leader: null,
+      mainDeck: [],
+      extraDeck: [],
+    });
 
-export function useDeckBuilder(cards: PlayableCard[]) {
-  /* -------------------------
-     STATE
-  ------------------------- */
+  const [activeZone, setActiveZone] =
+    useState<Zone>("leader");
 
-  const [deck, setDeck] = useState<Deck>({
-    name: "",
-    leader: null,
-    mainDeck: [],
-    extraDeck: [],
-  });
+  const [hoveredCardId, setHoveredCardId] =
+    useState<string | null>(null);
 
-  const [activeZone, setActiveZone] = useState<Zone>("leader");
-  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
+  const [hoverAnchor, setHoverAnchor] =
+    useState<DOMRect | null>(null);
 
-  /* -------------------------
-     LOOKUP MAP
-  ------------------------- */
+  /**
+   * Lookup
+   */
 
-  const cardMap = useMemo(() => {
-    return new Map(cards.map((c) => [c.id, c]));
-  }, [cards]);
+  const cardMap = useMemo(
+    () =>
+      new Map(
+        cards.map((card) => [
+          card.id,
+          card,
+        ])
+      ),
+    [cards]
+  );
 
-  /* -------------------------
-     DERIVED: CARDS
-  ------------------------- */
+  /**
+   * Derived cards
+   */
 
-  const leaderCard = useMemo(() => {
-    if (!deck.leader) return null;
-    return cardMap.get(deck.leader) ?? null;
-  }, [deck.leader, cardMap]);
+  const leaderCard =
+    deck.leader
+      ? cardMap.get(deck.leader) ??
+        null
+      : null;
 
-  const hoveredCard = useMemo(() => {
-    if (!hoveredCardId) return null;
-    return cardMap.get(hoveredCardId) ?? null;
-  }, [hoveredCardId, cardMap]);
+  const hoveredCard =
+    hoveredCardId
+      ? cardMap.get(
+          hoveredCardId
+        ) ?? null
+      : null;
 
-  const leaderColors = leaderCard?.colors ?? [];
+  const leaderColors =
+    leaderCard?.colors ?? [];
 
-  /* -------------------------
-     FILTERED POOL
-  ------------------------- */
+  /**
+   * Browser
+   */
 
   const filteredCards = useMemo(() => {
     if (activeZone === "leader") {
-      return cards.filter((c) => c.colors.length === 4);
+      return cards.filter(
+        (card) =>
+          card.colors.length === 4
+      );
     }
 
-    if (!leaderCard) return [];
+    if (!leaderCard) {
+      return [];
+    }
 
-    return cards.filter((c) =>
-      c.colors.some((color) => leaderColors.includes(color))
+    return cards.filter((card) =>
+      card.colors.some((color) =>
+        leaderColors.includes(color)
+      )
     );
-  }, [cards, activeZone, leaderCard, leaderColors]);
+  }, [
+    cards,
+    activeZone,
+    leaderCard,
+    leaderColors,
+  ]);
 
-  /* -------------------------
-     STATS
-------------------------- */
+  /**
+   * Deck stats
+   */
 
-  const counts = useMemo(() => getDeckCounts(deck), [deck]);
-  const cardCounts = useMemo(() => getCardCounts(deck), [deck]);
-
-  /* -------------------------
-     DECK ARRAYS
-  ------------------------- */
-
-  const mainDeckCards = useMemo(() => {
-    return deck.mainDeck
-      .map((entry) => {
-        const card = cardMap.get(entry.cardId);
-        if (!card) return null;
-
-        return { card, count: entry.count };
-      })
-      .filter(Boolean) as DeckCard[];
-  }, [deck.mainDeck, cardMap]);
-
-  const extraDeckCards = useMemo(() => {
-    return deck.extraDeck
-      .map((entry) => {
-        const card = cardMap.get(entry.cardId);
-        if (!card) return null;
-
-        return { card, count: entry.count };
-      })
-      .filter(Boolean) as DeckCard[];
-  }, [deck.extraDeck, cardMap]);
-
-  /* -------------------------
-     ACTIONS
-  ------------------------- */
-
-  const setDeckName = useCallback((name: string) => {
-    setDeck(prev => ({
-        ...prev,
-        name,
-    }));
-  }, []);
-
-  const handleCardClick = useCallback(
-    (card: PlayableCard) => {
-      setDeck((prev) => applySelection(prev, card, activeZone));
-
-      if (activeZone === "leader") {
-        setActiveZone("main");
-      }
-    },
-    [activeZone]
+  const counts = useMemo(
+    () => getDeckCounts(deck),
+    [deck]
   );
 
-  const handleIncrementCard = useCallback(
-    (cardId: string, zone: "main" | "extra") => {
-      const card = cardMap.get(cardId);
-      if (!card) return;
+  const cardCounts = useMemo(
+    () => getCardCounts(deck),
+    [deck]
+  );
 
-      setDeck((prev) => applySelection(prev, card, zone));
-    },
+  /**
+   * Display helpers
+   */
+
+  const mapDeckCards = useCallback(
+    (
+      entries: {
+        cardId: string;
+        count: number;
+      }[]
+    ): DeckCard[] =>
+      entries.flatMap((entry) => {
+        const card = cardMap.get(
+          entry.cardId
+        );
+
+        return card
+          ? [
+              {
+                card,
+                count: entry.count,
+              },
+            ]
+          : [];
+      }),
     [cardMap]
   );
 
-  const handleDecrementCard = useCallback(
-    (cardId: string, zone: "main" | "extra") => {
-      setDeck((prev) => decrementCard(prev, cardId, zone));
-    },
-    []
-  );
+  const mainDeckCards =
+    useMemo(
+      () =>
+        mapDeckCards(
+          deck.mainDeck
+        ),
+      [
+        deck.mainDeck,
+        mapDeckCards,
+      ]
+    );
 
-  const handleDeckNameChange = useCallback(
-    (name: string) => {
+  const extraDeckCards =
+    useMemo(
+      () =>
+        mapDeckCards(
+          deck.extraDeck
+        ),
+      [
+        deck.extraDeck,
+        mapDeckCards,
+      ]
+    );
+
+  /**
+   * Actions
+   */
+
+  const handleDeckNameChange =
+    useCallback(
+      (name: string) => {
         setDeck((prev) => ({
-        ...prev,
-        name,
+          ...prev,
+          name,
         }));
-    },
-    []
-  );
+      },
+      []
+    );
 
-  const loadDeck = useCallback((nextDeck: Deck) => {
-    setDeck(nextDeck);
-  }, []);
+  const handleCardClick =
+    useCallback(
+      (card: PlayableCard) => {
+        setDeck((prev) =>
+          applySelection(
+            prev,
+            card,
+            activeZone
+          )
+        );
 
-  /* -------------------------
-     RETURN
-  ------------------------- */
+        if (
+          activeZone === "leader"
+        ) {
+          setActiveZone("main");
+        }
+      },
+      [activeZone]
+    );
+
+  const handleIncrementCard =
+    useCallback(
+      (
+        cardId: string,
+        zone:
+          | "main"
+          | "extra"
+      ) => {
+        const card =
+          cardMap.get(cardId);
+
+        if (!card) {
+          return;
+        }
+
+        setDeck((prev) =>
+          applySelection(
+            prev,
+            card,
+            zone
+          )
+        );
+      },
+      [cardMap]
+    );
+
+  const handleDecrementCard =
+    useCallback(
+      (
+        cardId: string,
+        zone:
+          | "main"
+          | "extra"
+      ) => {
+        setDeck((prev) =>
+          decrementCard(
+            prev,
+            cardId,
+            zone
+          )
+        );
+      },
+      []
+    );
+
+  const loadDeck =
+    useCallback(
+      (deck: Deck) => {
+        setDeck(deck);
+      },
+      []
+    );
 
   return {
-    // state
     deck,
-    setDeckName,
     activeZone,
-    hoveredCardId,
 
-    // setters
-    setActiveZone,
-    setHoveredCardId,
-
-    // derived
     leaderCard,
     hoveredCard,
-    leaderColors,
+    hoverAnchor,
+
     filteredCards,
+
     counts,
     cardCounts,
 
     mainDeckCards,
     extraDeckCards,
 
-    // actions
+    setActiveZone,
+    setHoveredCardId,
+    setHoverAnchor,
+
+    handleDeckNameChange,
     handleCardClick,
     handleIncrementCard,
     handleDecrementCard,
-    handleDeckNameChange,
 
     loadDeck,
   };

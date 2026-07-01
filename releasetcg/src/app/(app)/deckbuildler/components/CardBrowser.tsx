@@ -8,10 +8,15 @@ import BrowserCard from "./cards/BrowserCard";
 
 type Props = {
   cards: PlayableCard[];
-
   cardCounts: CardCounts;
 
-  onHover: (cardId: string) => void;
+  setHoveredCardId: (
+    id: string | null
+  ) => void;
+
+  setHoverAnchor: (
+    anchor: DOMRect | null
+  ) => void;
 
   onClickCard: (
     card: PlayableCard
@@ -21,32 +26,32 @@ type Props = {
 export default function CardBrowser({
   cards,
   cardCounts,
-  onHover,
+  setHoveredCardId,
+  setHoverAnchor,
   onClickCard,
 }: Props) {
   return (
     <div className="flex h-full min-h-0 flex-col rounded-lg border">
-
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         <div
-            className="
+          className="
             grid
             gap-3
             grid-cols-[repeat(auto-fill,minmax(140px,1fr))]
-            "
+          "
         >
-            {cards.map((card) => (
+          {cards.map((card) => (
             <BrowserCard
-                key={card.id}
-                card={card}
-                counts={cardCounts[card.id]}
-                onHover={onHover}
-                onClick={onClickCard}
+              key={card.id}
+              card={card}
+              counts={cardCounts[card.id]}
+              setHoveredCardId={setHoveredCardId}
+              setHoverAnchor={setHoverAnchor}
+              onClick={onClickCard}
             />
-            ))}
+          ))}
         </div>
       </div>
-
     </div>
   );
 }

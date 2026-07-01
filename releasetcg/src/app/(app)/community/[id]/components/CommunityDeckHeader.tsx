@@ -21,33 +21,25 @@ export default function CommunityDeckHeader({
   setHoverAnchor,
 }: Props) {
   return (
-    <section className="grid grid-cols-2 gap-2">
+    <section className="flex items-start gap-4">
+        {leader && (
+            <CommunityCardChip
+            card={leader}
+            count={1}
+            setHoveredCardId={setHoveredCardId}
+            setHoverAnchor={setHoverAnchor}
+            />
+        )}
 
-      {leader && (
-        <CommunityCardChip
-          card={leader}
-          count={1}
-          setHoveredCardId={setHoveredCardId}
-          setHoverAnchor={setHoverAnchor}
-        />
-      )}
+        <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold leading-tight break-words">
+            {deckName}
+            </h1>
 
-      <div className="absolute top-5 items-center min-w-0 flex-1 flex-col pt-1"
-        style={{
-            left: 1/2,
-            top: 5,
-            transform: "translate(100%, 100%)",
-        }}
-      >
-        <h1 className="text-2xl font-bold leading-tight">
-          {deckName}
-        </h1>
-
-        <p className="mt-2 text-sm text-muted-foreground">
-          by {author}
-        </p>
-      </div>
-
+            <p className="mt-2 text-sm text-muted-foreground">
+            by {author}
+            </p>
+        </div>
     </section>
   );
 }

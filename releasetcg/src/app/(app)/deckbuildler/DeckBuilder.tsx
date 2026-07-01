@@ -10,8 +10,9 @@ import { useDeckOperations } from "./hooks/useDeckOperations";
 import CardBrowser from "./components/CardBrowser";
 import DeckControls from "./components/DeckControls";
 import DeckPanel from "./components/DeckPanel";
-import PreviewPanel from "./components/PreviewPanel";
 import DeckToolbar from "./components/DeckToolbar";
+
+import CardPreviewPopup from "@/app/(app)/components/cards/CardPreviewPopup";
 
 import { getDeck } from "@/utils/decks";
 
@@ -30,7 +31,10 @@ export default function DeckBuilder({
     setActiveZone,
 
     filteredCards,
+
     hoveredCard,
+    hoverAnchor,
+
     leaderCard,
 
     cardCounts,
@@ -44,6 +48,8 @@ export default function DeckBuilder({
     handleDecrementCard,
 
     setHoveredCardId,
+    setHoverAnchor,
+
     loadDeck,
   } = useDeckBuilder(cards);
 
@@ -65,7 +71,6 @@ export default function DeckBuilder({
     deckId,
   });
 
-  // Load an existing deck when editing
   useEffect(() => {
     if (!deckId) return;
 
@@ -101,48 +106,70 @@ export default function DeckBuilder({
   }
 
   return (
-    <div className="flex h-screen flex-col gap-3 p-4 overflow-hidden">
-      <DeckControls
-        deck={deck}
-        activeZone={activeZone}
-        setActiveZone={setActiveZone}
-        leaderCard={leaderCard}
-      />
-
-      <div className="grid min-h-0 flex-1 grid-cols-[2fr_320px_1fr] gap-4">
-        <div className="flex min-h-0 flex-col gap-3">
-          <DeckToolbar
-            filters={filters}
-            setFilters={setFilters}
-          />
-
-          <div className="min-h-0 flex-1">
-            <CardBrowser
-              cards={browserCards}
-              cardCounts={cardCounts}
-              onHover={setHoveredCardId}
-              onClickCard={handleCardClick}
-            />
-          </div>
-        </div>
-
-        <PreviewPanel card={hoveredCard} />
-
-        <DeckPanel
+    <>
+      <div className="flex h-screen flex-col gap-3 overflow-hidden p-4">
+        <DeckControls
           deck={deck}
-          onDeckNameChange={handleDeckNameChange}
+          activeZone={activeZone}
+          setActiveZone={setActiveZone}
           leaderCard={leaderCard}
-          mainDeckCards={mainDeckCards}
-          extraDeckCards={extraDeckCards}
-          counts={counts}
-          onIncrementCard={handleIncrementCard}
-          onDecrementCard={handleDecrementCard}
-          onSave={handleSave}
-          onExport={handleExport}
-          onImport={handleImport}
-          onClear={handleClear}
         />
+
+        <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_320px] gap-4">
+          <div className="flex min-h-0 flex-col gap-3">
+            <DeckToolbar
+              filters={filters}
+              setFilters={setFilters}
+            />
+
+            <div className="min-h-0 flex-1">
+              <CardBrowser
+                cards={browserCards}
+                cardCounts={cardCounts}
+                setHoveredCardId={
+                  setHoveredCardId
+                }
+                setHoverAnchor={
+                  setHoverAnchor
+                }
+                onClickCard={
+                  handleCardClick
+                }
+              />
+            </div>
+          </div>
+
+          <DeckPanel
+            deck={deck}
+            onDeckNameChange={
+              handleDeckNameChange
+            }
+            leaderCard={leaderCard}
+            mainDeckCards={
+              mainDeckCards
+            }
+            extraDeckCards={
+              extraDeckCards
+            }
+            counts={counts}
+            onIncrementCard={
+              handleIncrementCard
+            }
+            onDecrementCard={
+              handleDecrementCard
+            }
+            onSave={handleSave}
+            onExport={handleExport}
+            onImport={handleImport}
+            onClear={handleClear}
+          />
+        </div>
       </div>
-    </div>
+
+      <CardPreviewPopup
+        card={hoveredCard}
+        anchor={hoverAnchor}
+      />
+    </>
   );
 }
