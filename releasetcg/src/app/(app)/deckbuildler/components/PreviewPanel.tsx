@@ -6,6 +6,7 @@ import type { PlayableCard } from "@/types/cards";
 
 import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 import { PaletteChips } from "@/app/(app)/components/cards/PaletteChips";
+import { StatChips } from "@/app/(app)/components/cards/StatChips";
 
 type Props = {
   card: PlayableCard | null;
@@ -60,13 +61,11 @@ export default function PreviewPanel({
 
         <div className="flex justify-between text-sm">
 
-          <span>
-            Power {card.power}
-          </span>
-
-          <span>
-            Bulk {card.bulk}
-          </span>
+          <StatChips
+            power={card.power}
+            bulk={card.bulk}
+            size="sm"
+          />
 
         </div>
 

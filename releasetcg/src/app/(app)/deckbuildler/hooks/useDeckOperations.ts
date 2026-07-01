@@ -9,11 +9,12 @@ import type { PlayableCard } from "@/types/cards";
 import {
   saveDeck,
   updateDeck,
-  exportDeck,
   getImportedDeck,
   validateDeck,
   toDeckExport,
 } from "@/utils/decks";
+
+import { exportDeckCode } from "@/lib/export/exportDeckCode";
 
 type Props = {
   deck: Deck;
@@ -48,7 +49,7 @@ export function useDeckOperations({
       loadDeck(savedDeck);
 
       if (!deckId && savedDeck.id) {
-          router.replace(`/deckbuilder/${savedDeck.id}`);
+          router.replace(`/deckbuildler/${savedDeck.id}`);
       }
 
       alert("Deck saved!");
@@ -65,23 +66,11 @@ export function useDeckOperations({
    * Export
    */
   const handleExport = useCallback(async () => {
-    const validation = validateDeck(toDeckExport(deck), cards);
-
-    if (!validation.valid) {
-      alert(validation.errors.join("\n"));
-      return;
-    }
-
-    const code = exportDeck(
-      toDeckExport(deck)
-    );
-
     try {
-      await navigator.clipboard.writeText(code);
-
-      alert("Deck code copied to clipboard!");
-    } catch {
-      alert(code);
+      await exportDeckCode(deck, cards);
+      alert("Deck code copied!");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Export failed.");
     }
   }, [deck, cards]);
 
