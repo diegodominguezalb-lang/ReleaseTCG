@@ -1,5 +1,5 @@
 type Props = {
-  flavor_text: string;
+  flavor_text: string | null;
 };
 
 export function CardFlavorText({

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { CardDetails } from "@/types/cards";
+import { PlayableCard } from "@/types/cards";
 
 import { CardModal } from "@/features/cards/CardModal";
 
@@ -12,7 +12,7 @@ import { GalleryFilters } from "./components/GalleryFilters";
 import { GalleryGrid } from "./components/GalleryGrid";
 
 type Props = {
-  initialCards: CardDetails[];
+  initialCards: PlayableCard[];
 };
 
 export function Gallery({
@@ -30,7 +30,7 @@ export function Gallery({
   } = useGalleryFilters(initialCards);
 
   const [selectedCard, setSelectedCard] =
-    useState<CardDetails | null>(null);
+    useState<PlayableCard | null>(null);
 
   return (
     <div className="flex h-full flex-col">

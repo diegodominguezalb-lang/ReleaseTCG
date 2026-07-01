@@ -1,9 +1,9 @@
-import { CardDetails } from "@/types/cards";
+import { PlayableCard } from "@/types/cards";
 
 import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 
 type Props = {
-  card: CardDetails;
+  card: PlayableCard;
   onClick: () => void;
 };
 

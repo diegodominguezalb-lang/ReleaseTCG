@@ -2,7 +2,7 @@ import { getCardImageUrl } from "@/lib/images/getCardImageUrl";
 
 type Props = {
   name: string;
-  image_url: string;
+  image_url: string | null;
 };
 
 export function CardImage({

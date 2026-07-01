@@ -13,7 +13,7 @@ import {
   changePassword,
   sendPasswordVerificationCode,
 } from "@/utils/profile/changePassword";
-import { validatePassword } from "@/utils/validation/validatePassword";
+import { validatePassword } from "@/utils/profile/validation/validatePassword";
 
 export function EditProfileModal({
   profile,
