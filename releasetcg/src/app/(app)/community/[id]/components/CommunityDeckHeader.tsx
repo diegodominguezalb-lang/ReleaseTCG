@@ -32,7 +32,7 @@ export default function CommunityDeckHeader({
         />
       )}
 
-      <div className="absolute bottom-5 items-center min-w-0 flex-1 flex-col pt-1"
+      <div className="absolute top-5 items-center min-w-0 flex-1 flex-col pt-1"
         style={{
             left: 1/2,
             top: 5,

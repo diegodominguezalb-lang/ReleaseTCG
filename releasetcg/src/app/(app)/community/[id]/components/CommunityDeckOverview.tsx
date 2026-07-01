@@ -45,7 +45,7 @@ export default function CommunityDeckOverview({
       <div className="space-y-2 rounded-xl border bg-card p-4">
 
         {/* Leader */}
-        <section className="rounded-lg border-2 p-3">
+        <section className="rounded-lg p-3">
             <div className="flex gap-4">
 
                 <CommunityDeckHeader
@@ -59,7 +59,7 @@ export default function CommunityDeckOverview({
         </section>
 
         {/* Extra */}
-        <section className="rounded-lg border-2 p-3">
+        <section className="rounded-lg p-3">
           <CommunityDeckSection
             cards={extraDeck}
             setHoveredCardId={setHoveredCardId}
@@ -68,7 +68,7 @@ export default function CommunityDeckOverview({
         </section>
 
         {/* Main */}
-        <section className="rounded-lg border-2 p-3">
+        <section className="rounded-lg p-3">
           <CommunityDeckSection
             cards={mainDeck}
             setHoveredCardId={setHoveredCardId}
