@@ -1,0 +1,20 @@
+export enum EventType {
+    CardMoved = "cardMoved",
+    CardsDrawn = "cardsDrawn",
+    CardsRevealed = "cardsRevealed",
+
+    GateCreated = "gateCreated",
+    GateDestroyed = "gateDestroyed",
+
+    PlayerDamaged = "playerDamaged",
+    PlayerHealed = "playerHealed",
+
+    AttackStarted = "attackStarted",
+    AttackResolved = "attackResolved",
+
+    PriorityStarted = "priorityStarted",
+    PriorityEnded = "priorityEnded",
+
+    PhaseStarted = "phaseStarted",
+    TurnEnded = "turnEnded",
+}
