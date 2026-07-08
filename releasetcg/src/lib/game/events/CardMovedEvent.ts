@@ -1,6 +1,6 @@
 import {
     CardReference,
-    ZoneReference,
+    LocationReference,
 } from "@/lib/game/refs";
 
 import { EventType } from "./EventType";
@@ -11,7 +11,7 @@ export interface CardMovedEvent extends GameEvent {
 
     card: CardReference;
 
-    from: ZoneReference;
+    from: LocationReference;
 
-    to: ZoneReference;
+    to: LocationReference;
 }

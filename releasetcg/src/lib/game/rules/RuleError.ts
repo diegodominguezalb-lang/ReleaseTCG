@@ -1,7 +1,19 @@
-interface RuleError {
+export enum RuleError {
+    InvalidPhase = "INVALID_PHASE",
 
-    code: string;
+    InvalidPriority = "INVALID_PRIORITY",
 
-    message: string;
+    CardNotFound = "CARD_NOT_FOUND",
 
+    InvalidTarget = "INVALID_TARGET",
+
+    ColorMismatch = "COLOR_MISMATCH",
+
+    GateOccupied = "GATE_OCCUPIED",
+
+    EmptyGate = "EMPTY_GATE",
+
+    InvalidPlay = "INVALID_PLAY",
+
+    InvalidCombo = "INVALID_COMBO",
 }

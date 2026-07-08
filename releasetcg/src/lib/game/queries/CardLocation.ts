@@ -4,7 +4,7 @@ import {
 
 import {
     CardReference,
-    ZoneReference,
+    LocationReference,
 } from "../refs";
 
 export interface CardLocation {
@@ -12,7 +12,7 @@ export interface CardLocation {
 
     reference: CardReference;
 
-    zone: ZoneReference;
+    location: LocationReference;
 
     position: number;
 }

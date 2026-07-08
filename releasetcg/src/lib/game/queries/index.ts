@@ -1,15 +1,24 @@
 export * from "./CardLocation";
-export * from "./QueryContext";
 export * from "./ZoneLocation";
 
-export * from "./findCard";
-export * from "./findGate";
-export * from "./findPlayer";
-export * from "./findSetZone";
-export * from "./findStack";
+export * from "./infrastructure/findPile";
+export * from "./infrastructure/findCard";
+export * from "./infrastructure/findGate";
+export * from "./infrastructure/findPlayer";
+export * from "./infrastructure/findSetZone";
+export * from "./composition/findStack";
 export * from "./findZone";
 
-export * from "./getCardsInHand";
-export * from "./getCardsInZone";
-export * from "./getTopCard";
-export * from "./getCardOwner";
+export * from "./derived/getCardsInPile";
+export * from "./derived/getCardsInHand";
+export * from "./derived/getCardsInGap";
+export * from "./derived/getCardsInMainDeck";
+export * from "./derived/getCardsInExtraDeck";
+export * from "./derived/getCardsInPublicPile";
+
+export * from "./getTopGateCard";
+export * from "./getTopPileCard";
+export * from "./getBottomGateCard";
+export * from "./getBottomPileCard";
+
+export * from "./cardsShareColorSet";

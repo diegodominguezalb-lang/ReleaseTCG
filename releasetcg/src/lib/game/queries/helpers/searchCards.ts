@@ -1,19 +1,18 @@
-import {
-    CardInstance,
-} from "../../models";
+import { CardInstance } from "../../models";
 
 import {
     CardReference,
-    ZoneReference,
+    LocationReference,
 } from "../../refs";
 
 import { CardLocation } from "../CardLocation";
 
 export function searchCards(
     cards: CardInstance[],
-    zone: ZoneReference,
+    location: LocationReference,
     reference: CardReference,
 ): CardLocation | null {
+
     const position = cards.findIndex(
         card => card.id === reference.id,
     );
@@ -25,7 +24,8 @@ export function searchCards(
     return {
         card: cards[position],
         reference,
-        zone,
+        location,
         position,
     };
+
 }

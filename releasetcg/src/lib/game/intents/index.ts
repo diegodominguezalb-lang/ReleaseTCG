@@ -1,5 +1,6 @@
 export * from "./GameIntent";
 export * from "./IntentType";
+export * from "./PlayIntent";
 
 export * from "./BurnIntent";
 export * from "./ChainIntent";

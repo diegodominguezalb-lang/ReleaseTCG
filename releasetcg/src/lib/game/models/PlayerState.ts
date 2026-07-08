@@ -9,9 +9,4 @@ export interface PlayerState {
 
     leaderDrawn: boolean;
 
-    hand: CardInstance[];
-
-    mainDeck: CardInstance[];
-
-    extraDeck: CardInstance[];
 }

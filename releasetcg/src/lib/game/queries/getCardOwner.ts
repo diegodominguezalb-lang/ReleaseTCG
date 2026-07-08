@@ -3,8 +3,8 @@ import { CardReference } from "../refs";
 
 import { QueryContext } from "./QueryContext";
 
-import { findCard } from "./findCard";
-import { findPlayer } from "./findPlayer";
+import { findCard } from "./infrastructure/findCard";
+import { findPlayer } from "./infrastructure/findPlayer";
 
 export function getCardOwner(
     context: QueryContext,

@@ -1,6 +1,6 @@
-import { ZoneType } from "../models";
+import { LocationType } from "../models";
 import { BoardReference } from "./BoardReference";
 
 export interface SetZoneReference extends BoardReference {
-    type: ZoneType.Set;
+    locationType: LocationType.Set;
 }

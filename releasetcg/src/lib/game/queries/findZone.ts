@@ -1,44 +1,27 @@
-import { ZoneReference } from "../refs";
+import { LocationReference } from "../refs";
 import { ZoneType } from "../models";
 
 import { QueryContext } from "./QueryContext";
 
-import { findGate, findSetZone, findPlayer } from "./";
+import {
+    findGate,
+    findPile,
+    findSetZone,
+} from "./";
 
 export function findZone(
     context: QueryContext,
-    zone: ZoneReference,
+    location: LocationReference,
 ) {
-
-    switch (zone.type) {
+    switch (location.type) {
 
         case ZoneType.Gate:
-            return findGate(context, zone);
+            return findGate(context, location);
 
         case ZoneType.Set:
-            return findSetZone(context, zone);
+            return findSetZone(context, location);
 
-        case ZoneType.Hand:
-            return findPlayer(context, {
-                id: zone.playerId,
-            })?.hand ?? null;
-
-        case ZoneType.MainDeck:
-            return findPlayer(context, {
-                id: zone.playerId,
-            })?.mainDeck ?? null;
-
-        case ZoneType.ExtraDeck:
-            return findPlayer(context, {
-                id: zone.playerId,
-            })?.extraDeck ?? null;
-
-        case ZoneType.PublicPile:
-            return context.state.publicPile;
-
-        case ZoneType.Gap:
-            return context.state.gap;
-
+        default:
+            return findPile(context, location);
     }
-
 }

@@ -1,7 +1,7 @@
-import { ZoneReference } from "../refs";
+import { LocationReference } from "../refs";
 
 export interface ZoneLocation {
 
-    zone: ZoneReference;
+    zone: LocationReference;
 
 }
