@@ -12,6 +12,7 @@ export * from "./EndTurnCommand";
 export * from "./EngineCommand";
 export * from "./HealPlayerCommand";
 export * from "./MoveCardCommand";
+export * from "./MoveGateCommand";
 export * from "./ResolveAttackCommand";
 export * from "./RevealCardsCommand";
 export * from "./StartPriorityCommand";

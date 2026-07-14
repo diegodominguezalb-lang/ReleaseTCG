@@ -3,9 +3,8 @@ import { EngineContext } from "../EngineContext";
 import { GameCommand, CommandType } from "../commands";
 
 import {
-    moveCardReducer,
+    moveCardReducer, createGateReducer, startPriorityReducer, moveGateReducer,
 } from "../reducers";
-import { startPriorityReducer } from "../reducers/startPriorityReducer";
 
 export function processCommand(
     context: EngineContext,
@@ -26,6 +25,22 @@ export function processCommand(
                 context,
                 command,
             );
+            return;
+
+        case CommandType.CreateGate:
+            createGateReducer(
+                context,
+                command,
+            );
+            return;
+
+        case CommandType.MoveGate:
+
+            moveGateReducer(
+                context,
+                command,
+            );
+
             return;
             
         default:

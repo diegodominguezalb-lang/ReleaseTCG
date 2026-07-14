@@ -116,7 +116,7 @@ export function compileBurn(
     return success(
         createBurnAction(
             intent.player,
-            intent.cards[0],
+            intent.cards,
             destination,
         ),
     );

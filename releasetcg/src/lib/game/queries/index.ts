@@ -21,4 +21,6 @@ export * from "./getTopPileCard";
 export * from "./getBottomGateCard";
 export * from "./getBottomPileCard";
 
-export * from "./cardsShareColorSet";
+export * from "./purity/cardsShareColorSet";
+export * from "./purity/isPure";
+export * from "./purity/isPseudoPure";

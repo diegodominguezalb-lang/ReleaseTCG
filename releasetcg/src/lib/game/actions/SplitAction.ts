@@ -1,32 +1,43 @@
 import { BasePlayAction } from "./BasePlayAction";
-import { ActionCategory, PlayType } from "../models";
-import { CardReference, GateReference } from "../refs";
 
-export interface SplitAction extends BasePlayAction {
-    playType: PlayType.Split;
+import { ActionCategory } from "../models";
+
+import {
+    CardReference,
+    GateReference,
+} from "../refs";
+
+import { ActionType } from "./ActionType";
+
+export interface SplitAction
+    extends BasePlayAction {
+
+    type: ActionType.Split;
 
     cards: CardReference[];
 
     gates: GateReference[];
 
-    assignments: {
-        card: CardReference;
-        gate: GateReference;
-    }[];
 }
 
 export function createSplitAction(
     player: BasePlayAction["player"],
     cards: CardReference[],
     gates: GateReference[],
-    assignments: { card: CardReference; gate: GateReference }[],
 ): SplitAction {
+
     return {
+
+        type: ActionType.Split,
+
         category: ActionCategory.Play,
-        playType: PlayType.Split,
+
         player,
+
         cards,
+
         gates,
-        assignments,
+
     };
+
 }

@@ -1,13 +1,24 @@
 import { BasePlayAction } from "./BasePlayAction";
-import { ActionCategory, PlayType } from "../models";
-import { CardReference, GateReference } from "../refs";
+
+import {
+    ActionCategory,
+} from "../models";
+
+import {
+    CardReference,
+    GateReference,
+} from "../refs";
+
+import { ActionType } from "./ActionType";
 
 export interface ConstructAction extends BasePlayAction {
-    playType: PlayType.Construct;
+
+    type: ActionType.Construct;
 
     cards: CardReference[];
 
     gate: GateReference;
+
 }
 
 export function createConstructAction(
@@ -15,11 +26,19 @@ export function createConstructAction(
     cards: CardReference[],
     gate: GateReference,
 ): ConstructAction {
+
     return {
+
+        type: ActionType.Construct,
+
         category: ActionCategory.Play,
-        playType: PlayType.Construct,
+
         player,
+
         cards,
+
         gate,
+
     };
+
 }

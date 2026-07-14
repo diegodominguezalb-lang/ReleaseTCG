@@ -1,4 +1,10 @@
 import { BurnAction } from "./BurnAction";
+import { ConstructAction } from "./ConstructAction";
+import { ChainAction } from "./ChainAction";
+import { BoundAction } from "./BoundAction";
+import { SplitAction } from "./SplitAction";
+import { LiminalAction } from "./LiminalAction";
+
 import { DealDamageAction } from "./DealDamageAction";
 import { DrawCardsAction } from "./DrawCardsAction";
 import { DrawLeaderAction } from "./DrawLeaderAction";
@@ -14,6 +20,11 @@ import { ShufflePileAction } from "./ShufflePileAction";
 
 export type GameAction =
     | BurnAction
+    | ConstructAction
+    | ChainAction
+    | BoundAction
+    | SplitAction
+    | LiminalAction
     | SetCardAction
     | DrawLeaderAction
     | PassAction

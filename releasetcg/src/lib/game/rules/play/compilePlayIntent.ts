@@ -31,11 +31,11 @@ export function compilePlayIntent(
         case PlayType.Construct:
             return compileConstruct(context, intent);
 
-        case PlayType.Split:
-            return compileSplit(context, intent);
-
         case PlayType.Bound:
             return compileBound(context, intent);
+
+        case PlayType.Split:
+            return compileSplit(context, intent);
 
         case PlayType.Liminal:
             return compileLiminal(context, intent);

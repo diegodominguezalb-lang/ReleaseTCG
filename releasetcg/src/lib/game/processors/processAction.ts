@@ -6,8 +6,8 @@ import {
 } from "../actions";
 
 import {
-    processBurnAction,
-} from "./plays/processBurnAction";
+    processBurnAction, processConstructAction, processChainAction, processBoundAction, processSplitAction, processLiminalAction,
+} from "./plays";
 
 
 export function processAction(
@@ -26,6 +26,50 @@ export function processAction(
 
             return;
 
+        case ActionType.Construct:
+
+            processConstructAction(
+                context,
+                action,
+            );
+
+            return;
+        
+        case ActionType.Chain:
+
+            processChainAction(
+                context,
+                action,
+            );
+
+            return;
+
+        case ActionType.Bound:
+
+            processBoundAction(
+                context,
+                action,
+            );
+
+            return;
+
+        case ActionType.Split:
+
+            processSplitAction(
+                context,
+                action,
+            );
+
+            return;
+
+        case ActionType.Liminal:
+
+            processLiminalAction(
+                context,
+                action,
+            );
+
+            return;
 
         default:
 

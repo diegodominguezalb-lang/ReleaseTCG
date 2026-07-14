@@ -1,5 +1,6 @@
 export enum CommandType {
     MoveCard = "moveCard",
+    MoveGate = "moveGate",
 
     CreateGate = "createGate",
     DestroyGate = "destroyGate",

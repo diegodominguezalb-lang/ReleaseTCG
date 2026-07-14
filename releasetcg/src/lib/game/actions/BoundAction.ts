@@ -1,25 +1,53 @@
 import { BasePlayAction } from "./BasePlayAction";
-import { ActionCategory, PlayType } from "../models";
-import { CardReference, GateReference } from "../refs";
 
-export interface BoundAction extends BasePlayAction {
-    playType: PlayType.Bound;
+import { ActionCategory } from "../models";
 
-    cards: CardReference[];
+import {
+    CardReference,
+    GateReference,
+} from "../refs";
+
+import { ActionType } from "./ActionType";
+
+export interface BoundAction
+    extends BasePlayAction {
+
+    type: ActionType.Bound;
 
     gate: GateReference;
+
+    firstHalf: CardReference;
+
+    middle: CardReference[];
+
+    secondHalf: CardReference;
+
 }
 
 export function createBoundAction(
     player: BasePlayAction["player"],
-    cards: CardReference[],
     gate: GateReference,
+    firstHalf: CardReference,
+    middle: CardReference[],
+    secondHalf: CardReference,
 ): BoundAction {
+
     return {
+
+        type: ActionType.Bound,
+
         category: ActionCategory.Play,
-        playType: PlayType.Bound,
+
         player,
-        cards,
+
         gate,
+
+        firstHalf,
+
+        middle,
+
+        secondHalf,
+
     };
+
 }

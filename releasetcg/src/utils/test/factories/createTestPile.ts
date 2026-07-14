@@ -2,7 +2,7 @@ import {
     CardInstance,
     PileState,
     PileType,
-} from "../../models";
+} from "../../../lib/game/models";
 
 export function createTestPile(
     pileType: PileType,

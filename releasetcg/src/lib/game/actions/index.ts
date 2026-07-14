@@ -4,3 +4,8 @@ export * from "./PlayActionType";
 export * from "./BasePlayAction";
 
 export * from "./BurnAction";
+export * from "./ConstructAction";
+export * from "./ChainAction";
+export * from "./BoundAction";
+export * from "./SplitAction";
+export * from "./LiminalAction";

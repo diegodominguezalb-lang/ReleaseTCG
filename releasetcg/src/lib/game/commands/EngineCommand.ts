@@ -8,6 +8,7 @@ import { EndPriorityCommand } from "./EndPriorityCommand";
 import { EndTurnCommand } from "./EndTurnCommand";
 import { HealPlayerCommand } from "./HealPlayerCommand";
 import { MoveCardCommand } from "./MoveCardCommand";
+import { MoveGateCommand } from "./MoveGateCommand";
 import { ResolveAttackCommand } from "./ResolveAttackCommand";
 import { RevealCardsCommand } from "./RevealCardsCommand";
 import { StartPriorityCommand } from "./StartPriorityCommand";
@@ -23,6 +24,7 @@ export type EngineCommand =
     | EndTurnCommand
     | HealPlayerCommand
     | MoveCardCommand
+    | MoveGateCommand
     | ResolveAttackCommand
     | RevealCardsCommand
     | StartPriorityCommand;

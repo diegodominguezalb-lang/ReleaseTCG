@@ -26,3 +26,4 @@ export * from "./CardDefinition";
 export * from "./LeaderDefinition";
 export * from "./CardInstance";
 export * from "./LocationType";
+export * from "./PureUnit";

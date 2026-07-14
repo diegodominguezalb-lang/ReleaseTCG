@@ -1,11 +1,11 @@
-import { CardInstance } from "../models";
-import { QueryContext } from "./QueryContext";
+import { CardInstance } from "../../models";
+import { EngineContext } from "@/lib/game/EngineContext";
 
 /**
  * Returns true if two cards share at least `minOverlap` colors.
  */
 export function cardsShareColorSet(
-    context: QueryContext,
+    context: EngineContext,
     a: CardInstance,
     b: CardInstance,
     minOverlap: number = 1,

@@ -6,21 +6,21 @@ import { ActionType } from "./ActionType";
 export interface BurnAction extends BasePlayAction {
     type: ActionType.Burn;
 
-    card: CardReference;
+    cards: CardReference[];
 
     gate: GateReference;
 }
 
 export function createBurnAction(
     player: BasePlayAction["player"],
-    card: CardReference,
+    cards: CardReference[],
     gate: GateReference,
 ): BurnAction {
     return {
         category: ActionCategory.Play,
         type: ActionType.Burn,
         player,
-        card,
+        cards,
         gate,
     };
 }

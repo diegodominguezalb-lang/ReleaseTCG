@@ -1,29 +1,47 @@
 import { BasePlayAction } from "./BasePlayAction";
-import { ActionCategory, PlayType } from "../models";
-import { CardReference, GateReference } from "../refs";
 
-export interface LiminalAction extends BasePlayAction {
-    playType: PlayType.Liminal;
+import {
+    ActionCategory,
+} from "../models";
+
+import {
+    CardReference,
+    GateReference,
+} from "../refs";
+
+import {
+    ActionType,
+} from "./ActionType";
+
+export interface LiminalAction
+    extends BasePlayAction {
+
+    type: ActionType.Liminal;
+
+    card: CardReference;
 
     gates: GateReference[];
 
-    targetGate: GateReference;
-
-    card: CardReference;
 }
 
 export function createLiminalAction(
     player: BasePlayAction["player"],
     card: CardReference,
     gates: GateReference[],
-    targetGate: GateReference,
 ): LiminalAction {
+
     return {
+
+        type: ActionType.Liminal,
+
         category: ActionCategory.Play,
-        playType: PlayType.Liminal,
+
         player,
+
         card,
+
         gates,
-        targetGate,
+
     };
+
 }

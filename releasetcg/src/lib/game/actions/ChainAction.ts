@@ -1,26 +1,49 @@
 import { BasePlayAction } from "./BasePlayAction";
-import { PlayType } from "../models";
-import { CardReference, GateReference } from "../refs";
-import { ActionCategory } from "../models";
+
+import {
+    ActionCategory,
+} from "../models";
+
+import {
+    CardReference,
+    GateReference,
+} from "../refs";
+
+import { ActionType } from "./ActionType";
 
 export interface ChainAction extends BasePlayAction {
-    playType: PlayType.Chain;
 
-    cards: CardReference[];
+    type: ActionType.Chain;
 
     gate: GateReference;
+
+    openingUnit: CardReference[];
+
+    chain: CardReference[];
+
 }
 
 export function createChainAction(
     player: BasePlayAction["player"],
-    cards: CardReference[],
     gate: GateReference,
+    openingUnit: CardReference[],
+    chain: CardReference[],
 ): ChainAction {
+
     return {
+
+        type: ActionType.Chain,
+
         category: ActionCategory.Play,
-        playType: PlayType.Chain,
+
         player,
-        cards,
+
         gate,
+
+        openingUnit,
+
+        chain,
+
     };
+
 }

@@ -1,6 +1,11 @@
 export enum ActionType {
 
     Burn = "BURN",
+    Construct = "CONSTRUCT",
+    Chain = "CHAIN",
+    Bound = "BOUND",
+    Split = "SPLIT",
+    Liminal = "LIMINAL",
 
     SetCard = "SET_CARD",
 
