@@ -1,15 +1,29 @@
 import { EngineContext } from "@/lib/game/EngineContext";
 
-import { MoveGateCommand } from "@/lib/game/commands";
+import {
+    MoveGateCommand,
+} from "@/lib/game/commands";
 
 import {
     findGate,
 } from "@/lib/game/queries";
 
+import {
+    emitEvent,
+} from "@/lib/game/events/emitEvent";
+
+import {
+    createGateMovedEvent,
+} from "@/lib/game/events/state";
+
 export function moveGateReducer(
     context: EngineContext,
     command: MoveGateCommand,
 ): void {
+
+    //
+    // Resolve gates.
+    //
 
     const source =
         findGate(
@@ -20,7 +34,7 @@ export function moveGateReducer(
     if (!source) {
 
         throw new Error(
-            "MoveGateCommand: source gate not found.",
+            "MoveGateReducer: source gate not found.",
         );
 
     }
@@ -34,18 +48,35 @@ export function moveGateReducer(
     if (!destination) {
 
         throw new Error(
-            "MoveGateCommand: destination gate not found.",
+            "MoveGateReducer: destination gate not found.",
         );
 
     }
+
+    //
+    // Source must contain a stack.
+    //
 
     if (!source.stack) {
 
         throw new Error(
-            "MoveGateCommand: source gate is empty.",
+            "MoveGateReducer: source gate is empty.",
         );
 
     }
+
+    //
+    // Preserve the original references for
+    // the emitted event.
+    //
+
+    const previousGate = {
+        ...command.source,
+    };
+
+    const nextGate = {
+        ...command.destination,
+    };
 
     //
     // Ensure the destination has a stack.
@@ -58,20 +89,8 @@ export function moveGateReducer(
     };
 
     //
-    // Place the entire source gate on top of
-    // the destination gate.
-    //
-    // Source:
-    //   BR
-    //   GB
-    //
-    // Destination:
-    //   GBY
-    //
-    // Result:
-    //   BR
-    //   GB
-    //   GBY
+    // Move the entire source stack onto
+    // the destination stack.
     //
 
     destination.stack.cards.unshift(
@@ -79,9 +98,21 @@ export function moveGateReducer(
     );
 
     //
-    // The source gate no longer exists.
+    // Remove the source stack.
     //
 
     source.stack = null;
+
+    //
+    // Emit state event.
+    //
+
+    emitEvent(
+        context,
+        createGateMovedEvent(
+            previousGate,
+            nextGate,
+        ),
+    );
 
 }

@@ -20,7 +20,7 @@ export * from "./PlayType";
 export * from "./GameOptions";
 
 export * from "./CardColor";
-export * from "./CardEffectDefinition";
+export * from "./CardDefinition";
 export * from "./CardTraitDefinition";
 export * from "./CardDefinition";
 export * from "./LeaderDefinition";

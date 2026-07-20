@@ -1,6 +1,6 @@
 import { CardColor } from "./CardColor";
-import { CardEffectDefinition } from "./CardEffectDefinition";
 import { CardTraitDefinition } from "./CardTraitDefinition";
+import { Ability } from "@/lib/game/abilities";
 
 export interface CardDefinition {
     id: string;
@@ -15,5 +15,5 @@ export interface CardDefinition {
 
     trait: CardTraitDefinition | null;
 
-    effects: CardEffectDefinition[];
+    abilities: Ability[];
 }
