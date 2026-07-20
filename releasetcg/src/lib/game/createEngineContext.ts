@@ -10,7 +10,8 @@ export function createEngineContext(
         state,
         cardDatabase,
         commandQueue: [],
-        events: [],
+        eventQueue: [],
+        pendingResolutions: [],
     };
 
 }

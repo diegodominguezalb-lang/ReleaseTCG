@@ -1,14 +1,19 @@
 import { CardDefinition } from "./models";
 import { GameCommand } from "./commands";
-import { GameEvent } from "./events";
+import { EngineEvent } from "./events/EngineEvent";
 import { GameState } from "./models";
+import { PendingResolution } from "./resolution";
 
 export interface EngineContext {
+
     state: GameState;
 
     cardDatabase: Record<string, CardDefinition>;
 
     commandQueue: GameCommand[];
 
-    events: GameEvent[];
+    eventQueue: EngineEvent[];
+
+    pendingResolutions: PendingResolution[];
+
 }
