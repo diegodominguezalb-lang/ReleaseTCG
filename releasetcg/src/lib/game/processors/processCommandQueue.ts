@@ -1,6 +1,7 @@
 import { EngineContext } from "../EngineContext";
 
 import { processCommand } from "./processCommand";
+import { processEvent } from "../events/processEvent";
 
 
 export function processCommandQueue(
@@ -30,6 +31,27 @@ export function processCommandQueue(
 
 
         processed++;
+
+
+        while (
+            context.eventQueue.length > 0
+        ) {
+
+            const event =
+                context.eventQueue.shift();
+
+
+            if (!event) {
+                continue;
+            }
+
+
+            processEvent(
+                context,
+                event,
+            );
+
+        }
 
     }
 
