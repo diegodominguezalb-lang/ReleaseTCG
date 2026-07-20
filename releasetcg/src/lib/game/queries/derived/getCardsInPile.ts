@@ -8,7 +8,7 @@ import {
 
 import { EngineContext } from "../../EngineContext";
 
-import { findPile } from "../infrastructure/findPile";
+import { findPile } from "../lookup/findPile";
 
 export function getCardsInPile(
     context: EngineContext,

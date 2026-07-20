@@ -1,7 +1,7 @@
 import { GateStack } from "../../models";
 import { StackReference } from "../../refs";
 
-import { findGate } from "../infrastructure/findGate";
+import { findGate } from "../lookup/findGate";
 import { QueryContext } from "../QueryContext";
 
 export function findStack(
