@@ -3,19 +3,74 @@ import {
     CardDefinition,
 } from "../../../lib/game/models";
 
+import {
+    Ability,
+} from "@/lib/game/abilities";
+
+export interface TestCardDefinitionOptions {
+
+    id?: string;
+
+    name?: string;
+
+    power?: number;
+
+    bulk?: number;
+
+    colors?: CardColor[];
+
+    abilities?: Ability[];
+
+}
+
+let nextDefinition = 1;
+
 export function createTestCardDefinition(
-    id: string,
-    colors: CardColor[],
+
+    options: TestCardDefinitionOptions = {},
+
 ): CardDefinition {
 
     return {
 
-        id,
+        id:
 
-        colors,
+            options.id ??
 
-        // remaining required properties
+            `TEST_DEF_${nextDefinition++}`,
 
-    } as CardDefinition;
+        name:
+
+            options.name ??
+
+            "Test Card",
+
+        power:
+
+            options.power ??
+
+            0,
+
+        bulk:
+
+            options.bulk ??
+
+            0,
+
+        colors:
+
+            options.colors ??
+
+            [],
+
+        trait: null,
+
+        abilities:
+
+            options.abilities ??
+
+            [],
+
+    };
 
 }

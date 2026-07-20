@@ -2,8 +2,6 @@ import { EngineContext } from "@/lib/game/EngineContext";
 
 import {
     BoardPosition,
-    CardColor,
-    CardDefinition,
     CardInstance,
     GamePhase,
     GameState,
@@ -19,6 +17,7 @@ import {
 
 import {
     createTestCardDefinition,
+    TestCardDefinitionOptions,
 } from "../factories/createTestCardDefinition";
 
 import {
@@ -28,6 +27,28 @@ import {
 import { GateReference, LocationReference } from "@/lib/game/refs";
 import { PlayIntent } from "@/lib/game/intents/PlayIntent";
 import { compilePlayIntent } from "@/lib/game/rules/play/compilePlayIntent";
+
+import { createEngineContext } from "@/lib/game";
+
+import {
+    processPendingResolution,
+} from "@/lib/game/resolution";
+
+import {
+    processAction,
+} from "@/lib/game/processors/processAction";
+
+import {
+    processCommandQueue,
+} from "@/lib/game/processors/processCommandQueue";
+
+import {
+    clearEventListeners,
+} from "@/lib/game/events/listeners/EventListenerRegistry";
+
+import {
+    registerDefaultEventListeners,
+} from "@/lib/game/events/listeners/registerDefaultEventListeners";
 
 export class TestGame {
 
@@ -39,9 +60,11 @@ export class TestGame {
 
     public readonly player2: PlayerState;
 
-    private nextDefinition = 1;
-
     constructor() {
+
+        clearEventListeners();
+
+        registerDefaultEventListeners();
 
         const leader1 = createTestCardInstance(
             "leader-p1",
@@ -140,106 +163,125 @@ export class TestGame {
 
                 currentPlayerId: "P1",
 
-                passes: 0,
-
             } satisfies PriorityState,
 
             winnerId: null,
 
         };
 
-        this.context = {
+        this.context =
 
-            state: this.state,
+            createEngineContext(
 
-            cardDatabase: {},
+                this.state,
 
-            commandQueue: [],
+                {},
 
-            events: [],
+            );
 
-        };
+        }
 
-    }
+    public addHandCard(
+        options: TestCardDefinitionOptions & {
 
-    public addHandCard(options: {
+            playerId?: string;
 
-        playerId?: string;
-
-        colors: CardColor[];
-
-    }): CardInstance {
+        } = {},
+    ): CardInstance {
 
         const playerId =
             options.playerId ?? "P1";
 
         const card =
+
             this.createCard(
-                options.colors,
+
                 playerId,
+
+                options,
+
             );
 
         this.getPile(
+
             PileType.Hand,
+
             playerId,
+
         ).cards.push(card);
 
         return card;
 
     }
 
-    public addDeckCard(options: {
+    public addDeckCard(
+        options: TestCardDefinitionOptions & {
 
-        playerId?: string;
+            playerId?: string;
 
-        colors: CardColor[];
-
-    }): CardInstance {
+        } = {},
+    ): CardInstance {
 
         const playerId =
             options.playerId ?? "P1";
 
         const card =
+
             this.createCard(
-                options.colors,
+
                 playerId,
+
+                options,
+
             );
 
         this.getPile(
+
             PileType.MainDeck,
+
             playerId,
+
         ).cards.push(card);
 
         return card;
 
     }
 
-    public addGateCard(options: {
+    public addGateCard(
+        options: TestCardDefinitionOptions & {
 
-        side: PlayerSide;
+            side: PlayerSide;
 
-        position: BoardPosition;
+            position: BoardPosition;
 
-        colors: CardColor[];
+            ownerId?: string;
 
-        ownerId?: string;
-
-    }): CardInstance {
+        },
+    ): CardInstance {
 
         const ownerId =
             options.ownerId ?? "P1";
 
         const card =
+
             this.createCard(
-                options.colors,
+
                 ownerId,
+
+                options,
+
             );
 
         let gate =
+
             this.state.board.gateZones.find(
-                g =>
-                    g.side === options.side &&
-                    g.position === options.position,
+
+                gate =>
+
+                    gate.side === options.side &&
+
+                    gate.position === options.position,
+
             );
 
         if (!gate) {
@@ -259,7 +301,9 @@ export class TestGame {
             };
 
             this.state.board.gateZones.push(
+
                 gate,
+
             );
 
         }
@@ -370,18 +414,249 @@ export class TestGame {
 
     }
 
+    public play(
+        intent: PlayIntent,
+    ): void {
+
+        const result =
+
+            this.compilePlay(
+                intent,
+            );
+
+        if (!result.success) {
+
+            throw new Error(
+
+                result.errors.join("\n") ||
+
+                "Play failed.",
+
+            );
+
+        }
+
+        for (
+
+            const action of result.actions
+
+        ) {
+
+            processAction(
+
+                this.context,
+
+                action,
+
+            );
+
+        }
+
+        processCommandQueue(
+
+            this.context,
+
+        );
+
+    }
+
+    public cardDefinition(
+        card: CardInstance,
+    ) {
+
+        return this.context.cardDatabase[
+            card.cardId
+        ];
+
+    }
+
+    public hand(
+        playerId = "P1",
+    ): CardInstance[] {
+
+        return this.getPile(
+
+            PileType.Hand,
+
+            playerId,
+
+        ).cards;
+
+    }
+
+    public deck(
+        playerId = "P1",
+    ): CardInstance[] {
+
+        return this.getPile(
+
+            PileType.MainDeck,
+
+            playerId,
+
+        ).cards;
+
+    }
+
+    public health(
+        playerId = "P1",
+    ): number {
+
+        const player =
+
+            this.state.players.find(
+
+                player =>
+
+                    player.id === playerId,
+
+            );
+
+        if (!player) {
+
+            throw new Error(
+
+                `Unknown player ${playerId}`,
+
+            );
+
+        }
+
+        return player.health;
+
+    }
+
+    public player(
+        id: string,
+    ): PlayerState {
+
+        const player =
+
+            this.state.players.find(
+
+                player =>
+
+                    player.id === id,
+
+            );
+
+        if (!player) {
+
+            throw new Error(
+                "Player not found.",
+            );
+
+        }
+
+        return player;
+
+    }
+
+    public resolveNextAbility(): void {
+
+        const resolution =
+
+            this.context.pendingResolutions.shift();
+
+        if (!resolution) {
+
+            throw new Error(
+                "No pending resolutions.",
+            );
+
+        }
+
+        processPendingResolution(
+
+            this.context,
+
+            resolution,
+
+        );
+
+        processCommandQueue(
+
+            this.context,
+
+        );
+
+    }
+
+    public get pendingResolutionCount(): number {
+
+        return this.context.pendingResolutions.length;
+
+    }
+
+    public burn(
+        card: CardInstance,
+        side: PlayerSide,
+        position: BoardPosition,
+    ): void {
+
+        this.play(
+
+            this.playIntent(
+
+                PlayType.Burn,
+
+                [card],
+
+                this.gateReference(
+
+                    side,
+
+                    position,
+
+                ),
+
+            ),
+
+        );
+
+    }
+
+    public findHand(
+        playerId: string,
+    ): PileState {
+
+        return this.getPile(
+
+            PileType.Hand,
+
+            playerId,
+
+        );
+
+    }
+
+    public findDeck(
+        playerId: string,
+    ): PileState {
+
+        return this.getPile(
+
+            PileType.MainDeck,
+
+            playerId,
+
+        );
+
+    }
+
     private createCard(
-        colors: CardColor[],
         ownerId: string,
+
+        options: TestCardDefinitionOptions = {},
+
     ): CardInstance {
 
-        const definitionId =
-            `TEST_DEF_${this.nextDefinition++}`;
+        const definition =
 
-        const definition: CardDefinition =
             createTestCardDefinition(
-                definitionId,
-                colors,
+
+                options,
+
             );
 
         this.context.cardDatabase[
@@ -389,8 +664,11 @@ export class TestGame {
         ] = definition;
 
         return createTestCardInstance(
+
             definition.id,
+
             ownerId,
+
         );
 
     }

@@ -7,7 +7,7 @@ import { PileType, LocationType } from "../../models";
 import {
     findCard,
     findGate,
-    getTopGateCard,
+    findTopGateCard,
     cardsShareColorSet,
 } from "../../queries";
 
@@ -89,7 +89,7 @@ export function compileBurn(
         );
     }
 
-    const topCard = getTopGateCard(
+    const topCard = findTopGateCard(
         context,
         destination,
     );
