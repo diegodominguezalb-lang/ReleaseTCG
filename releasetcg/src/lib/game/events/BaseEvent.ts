@@ -1,5 +1,5 @@
 import { EventType } from "./EventType";
 
-export interface GameEvent {
+export interface BaseEvent {
     type: EventType;
 }

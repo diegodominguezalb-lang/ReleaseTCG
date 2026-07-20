@@ -5,6 +5,7 @@ export enum EventType {
 
     GateCreated = "gateCreated",
     GateDestroyed = "gateDestroyed",
+    GateMoved = "gateMoved",
 
     PlayerDamaged = "playerDamaged",
     PlayerHealed = "playerHealed",
