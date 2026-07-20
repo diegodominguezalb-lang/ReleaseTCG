@@ -1,6 +1,6 @@
 import {
     PlayerReference,
-    ZoneReference,
+    LocationReference,
 } from "@/lib/game/refs";
 
 import { BaseCommand } from "./BaseCommand";
@@ -13,5 +13,5 @@ export interface DrawCardsCommand extends BaseCommand {
 
     count: number;
 
-    source: ZoneReference;
+    source: LocationReference;
 }
