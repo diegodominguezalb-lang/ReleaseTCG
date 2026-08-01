@@ -2,14 +2,22 @@ import {
     EngineContext,
 } from "@/lib/game/EngineContext";
 
-import {
-    CardInstance,
-} from "@/lib/game/models";
+import { CardReference } from "@/lib/game/refs";
+
+import { Ability } from "@/lib/game/abilities";
+
+import { Effect } from "@/lib/game/effects";
 
 export interface TargetContext {
 
-    game: EngineContext;
+    engine: EngineContext;
 
-    source: CardInstance;
+    sourcePlayerId: string;
+
+    sourceCard?: CardReference;
+
+    sourceAbility?: Ability;
+
+    sourceEffect?: Effect;
 
 }

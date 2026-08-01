@@ -1,42 +1,112 @@
-import { GameState } from "../models";
-import { createBoard } from "./createBoard";
-import { createPlayer } from "./createPlayer";
-import { createPriorityState } from "./createPriorityState";
-import { createTurnState } from "./createTurnState";
-import { createPublicPile } from "../utils";
-import { CreateGameOptions } from "../models/GameOptions";
+import {
+    GameState,
+} from "../models";
+
+import {
+    CreateGameOptions,
+} from "../models/GameOptions";
+
+import {
+    createBoard,
+} from "./createBoard";
+
+import {
+    createPlayer,
+} from "./createPlayer";
+
+import {
+    createPlayerPiles,
+} from "./createPlayerPiles";
+
+import {
+    createSharedPiles,
+} from "./createSharedPiles";
+
+import {
+    createPriorityState,
+} from "./createPriorityState";
+
+import {
+    createTurnState,
+} from "./createTurnState";
 
 export function createGame(
-    options: CreateGameOptions
+    options: CreateGameOptions,
 ): GameState {
-    const first = createPlayer(options.players[0]);
-    const second = createPlayer(options.players[1]);
+
+    //
+    // Runtime players.
+    //
+
+    const firstPlayer = createPlayer(
+        options.players[0],
+    );
+
+    const secondPlayer = createPlayer(
+        options.players[1],
+    );
+
+    //
+    // Player piles.
+    //
+
+    const firstPlayerPiles =
+        createPlayerPiles(
+            options.players[0],
+        );
+
+    const secondPlayerPiles =
+        createPlayerPiles(
+            options.players[1],
+        );
+
+    //
+    // Shared piles.
+    //
+
+    const sharedPiles =
+        createSharedPiles(
+
+            firstPlayerPiles.remainingMainDeck,
+
+            secondPlayerPiles.remainingMainDeck,
+
+        );
 
     return {
+
         id: options.gameId,
 
         players: [
-            first.player,
-            second.player,
+
+            firstPlayer,
+
+            secondPlayer,
+
         ],
 
         board: createBoard(),
 
-        publicPile: createPublicPile(
-            first.remainingMainDeck,
-            second.remainingMainDeck
-        ),
+        piles: [
 
-        gap: [],
+            ...firstPlayerPiles.piles,
+
+            ...secondPlayerPiles.piles,
+
+            ...sharedPiles,
+
+        ],
 
         turn: createTurnState(
-            options.firstPlayerId
+            options.firstPlayerId,
         ),
 
         priority: createPriorityState(
-            options.firstPlayerId
+            options.firstPlayerId,
         ),
 
         winnerId: null,
+
     };
+
 }

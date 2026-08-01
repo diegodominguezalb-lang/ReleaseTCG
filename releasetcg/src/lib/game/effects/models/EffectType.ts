@@ -2,10 +2,12 @@ export enum EffectType {
 
     DrawCards = "drawCards",
 
-    DamagePlayer = "damagePlayer",
+    Damage = "damage",
 
     HealPlayer = "healPlayer",
 
     RevealCards = "revealCards",
+
+    Stack = "stack",
 
 }

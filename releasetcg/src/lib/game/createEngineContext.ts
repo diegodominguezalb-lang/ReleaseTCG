@@ -12,6 +12,7 @@ export function createEngineContext(
         commandQueue: [],
         eventQueue: [],
         pendingResolutions: [],
+        pendingInteractions: [],
     };
 
 }

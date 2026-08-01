@@ -5,6 +5,5 @@ export function createPriorityState(
 ): PriorityState {
     return {
         currentPlayerId: firstPlayerId,
-        passes: 0,
     };
 }

@@ -1,3 +1,5 @@
+export * from "./processEffectWithModifiers";
+
 export * from "./processDrawCardsEffect";
-export * from "./processDamagePlayerEffect";
+export * from "./processDamageEffect";
 export * from "./processRevealCardsEffect";

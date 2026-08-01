@@ -7,8 +7,8 @@ import {
 } from "../Ability";
 
 import {
-    processEffect,
-} from "@/lib/game/effects";
+    processEffectWithModifiers,
+} from "@/lib/game/effects/processors";
 
 export function processAbility(
     context: AbilityContext,
@@ -21,7 +21,7 @@ export function processAbility(
 
     ) {
 
-        processEffect(
+        processEffectWithModifiers(
 
             context,
 

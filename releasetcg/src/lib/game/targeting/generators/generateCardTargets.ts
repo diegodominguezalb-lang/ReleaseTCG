@@ -1,6 +1,6 @@
 import {
-    EngineContext,
-} from "@/lib/game/EngineContext";
+    TargetContext,
+} from "@/lib/game/targeting/models";
 
 import {
     findAllCards,
@@ -15,27 +15,18 @@ import {
 } from "../models/TargetType";
 
 export function generateCardTargets(
-    context: EngineContext,
+    targetContext: TargetContext,
 ): CardTarget[] {
 
     return findAllCards(
+        targetContext.engine,
+    ).map(location => ({
 
-        context,
+        type: TargetType.Card,
 
-    ).map(
+        reference: {
+            id: location.card.id,
+        },
 
-        location => ({
-
-            type: TargetType.Card,
-
-            reference: {
-
-                id: location.card.id,
-
-            },
-
-        }),
-
-    );
-
+    }));
 }

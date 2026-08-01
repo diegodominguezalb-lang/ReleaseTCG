@@ -3,8 +3,9 @@ import {
     Effect,
     EffectType,
 
-    createDamagePlayerEffect,
+    createDamageEffect,
     createDrawCardsEffect,
+    createStackEffect,
 
 } from "@/lib/game/effects";
 
@@ -87,7 +88,7 @@ export function parseEffect(
 
         }
 
-        case EffectType.DamagePlayer:
+        case EffectType.Damage:
 
         {
 
@@ -95,19 +96,32 @@ export function parseEffect(
 
                 value.amount,
 
-                "DamagePlayer amount missing.",
+                "Damage amount missing.",
 
             );
 
-            assertString(
+            return createDamageEffect(
 
-                value.target,
+                value.amount,
 
-                "DamagePlayer target missing.",
+                modifiers,
 
             );
 
-            return createDamagePlayerEffect(
+        }
+
+        case EffectType.Stack:
+        {
+
+            assertNumber(
+
+                value.amount,
+
+                "Stack amount missing.",
+
+            );
+
+            return createStackEffect(
 
                 value.amount,
 

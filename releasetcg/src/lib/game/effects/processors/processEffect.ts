@@ -1,3 +1,9 @@
+/*
+
+    Effects declare what actions have to get done.
+    Operations carry these effects out.
+
+*/
 import {
     AbilityContext,
 } from "@/lib/game/abilities";
@@ -12,8 +18,8 @@ import {
 } from "./processDrawCardsEffect";
 
 import {
-    processDamagePlayerEffect,
-} from "./processDamagePlayerEffect";
+    processDamageEffect,
+} from "./processDamageEffect";
 
 import {
     processRevealCardsEffect,
@@ -39,9 +45,9 @@ export function processEffect(
 
             return;
 
-        case EffectType.DamagePlayer:
+        case EffectType.Damage:
 
-            processDamagePlayerEffect(
+            processDamageEffect(
                 context,
                 effect,
             );

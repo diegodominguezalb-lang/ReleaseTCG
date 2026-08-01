@@ -1,6 +1,6 @@
 import {
-    EngineContext,
-} from "@/lib/game/EngineContext";
+    TargetContext,
+} from "../models";
 
 import {
     PileType,
@@ -14,13 +14,13 @@ import {
     generatePileTargets,
 } from "./generatePileTargets";
 
-export function buildDrawTargets(
-    context: EngineContext,
+export function generateDrawTargets(
+    targetContext: TargetContext,
 ): PileTarget[] {
 
     return generatePileTargets(
 
-        context,
+        targetContext.engine,
 
     ).filter(
 

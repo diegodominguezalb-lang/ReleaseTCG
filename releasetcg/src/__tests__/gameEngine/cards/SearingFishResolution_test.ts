@@ -13,7 +13,7 @@ import {
 
 import {
     createDrawCardsEffect,
-    createDamagePlayerEffect,
+    createDamageEffect,
 } from "@/lib/game/effects";
 
 describe(
@@ -52,7 +52,7 @@ describe(
                                     1,
                                 ),
 
-                                createDamagePlayerEffect(
+                                createDamageEffect(
                                     1,
                                 ),
 

@@ -1,45 +1,41 @@
 import {
-    EngineContext,
-} from "@/lib/game/EngineContext";
-
-import {
-    Target,
+    PlayerTarget,
     TargetType,
 } from "../models";
 
+import {
+    TargetContext,
+} from "../models";
+
 export function generateDamageTargets(
-    context: EngineContext,
-    sourcePlayerId: string,
-): Target[] {
+    targetContext: TargetContext,
+): PlayerTarget[] {
 
-    const targets: Target[] = [];
+    return targetContext.engine.state.players
 
-    //
-    // Opponent.
-    //
+        .filter(
 
-    for (const player of context.state.players) {
+            player =>
 
-        if (player.id === sourcePlayerId) {
-            continue;
-        }
+                player.id !==
+                targetContext.sourcePlayerId,
 
-        targets.push({
+        )
 
-            type: TargetType.Player,
+        .map(
 
-            reference: {
-                id: player.id,
-            },
+            player => ({
 
-        });
+                type: TargetType.Player,
 
-    }
+                reference: {
 
-    //
-    // Totems later.
-    //
+                    id: player.id,
 
-    return targets;
+                },
+
+            }),
+
+        );
 
 }

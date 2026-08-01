@@ -1,22 +1,18 @@
 import {
-    EngineContext,
-} from "@/lib/game/EngineContext";
+    LocationType,
+} from "@/lib/game/models";
 
 import {
     GateTarget,
+    TargetContext,
+    TargetType,
 } from "../models";
 
-import {
-    TargetType,
-} from "../models/TargetType";
-
-import { LocationType } from "@/lib/game/models";
-
 export function generateGateTargets(
-    context: EngineContext,
+    targetContext: TargetContext,
 ): GateTarget[] {
 
-    return context.state.board.gateZones.map(
+    return targetContext.engine.state.board.gateZones.map(
 
         gate => ({
 

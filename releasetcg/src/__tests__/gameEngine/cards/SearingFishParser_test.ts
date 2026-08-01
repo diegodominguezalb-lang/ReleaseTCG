@@ -38,21 +38,9 @@ describe(
 
                             {
 
-                                type: "damagePlayer",
-
-                                target: "opponent",
+                                type: "damage",
 
                                 amount: 1,
-
-                                modifiers: [
-
-                                    {
-
-                                        type: "always",
-
-                                    },
-
-                                ],
 
                             },
 

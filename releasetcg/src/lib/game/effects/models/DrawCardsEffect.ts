@@ -4,7 +4,7 @@ import {
 
 import {
     EffectModifier,
-} from "../modifiers/EffectModifier";
+} from "../modifiers/models/EffectModifier";
 
 export interface DrawCardsEffect {
 

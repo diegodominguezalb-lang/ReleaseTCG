@@ -1,6 +1,6 @@
 import {
     EffectModifier,
-} from "../modifiers/EffectModifier";
+} from "../modifiers/models/EffectModifier";
 
 import {
     EffectType,

@@ -3,17 +3,23 @@ import {
 } from "./DrawCardsEffect";
 
 import {
-    DamagePlayerEffect,
-} from "./DamagePlayerEffect";
+    DamageEffect,
+} from "./DamageEffect";
 
 import {
     RevealCardsEffect,
 } from "./RevealCardsEffect";
 
+import {
+    StackEffect,
+} from "./StackEffect";
+
 export type Effect =
 
     | DrawCardsEffect
 
-    | DamagePlayerEffect
+    | DamageEffect
 
-    | RevealCardsEffect;
+    | RevealCardsEffect
+
+    | StackEffect;

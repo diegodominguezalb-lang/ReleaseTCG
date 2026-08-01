@@ -1,3 +1,9 @@
+/*
+
+    Operations serve as engine instructions. 
+    Effects declare what has to be done and operations accomplish those
+
+*/
 import { EngineContext } from "@/lib/game/EngineContext";
 
 import {
