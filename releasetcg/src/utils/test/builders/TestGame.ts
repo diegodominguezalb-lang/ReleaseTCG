@@ -3,7 +3,7 @@ import { EngineContext } from "@/lib/game/EngineContext";
 import {
     BoardPosition,
     CardInstance,
-    GamePhase,
+    TurnPhase,
     GameState,
     LocationType,
     PileState,
@@ -151,11 +151,11 @@ export class TestGame {
 
             turn: {
 
-                turn: 1,
+                turnNumber: 1,
 
-                activePlayerId: "P1",
+                currentPlayerId: "P1",
 
-                phase: GamePhase.Action,
+                phase: TurnPhase.Action,
 
             } satisfies TurnState,
 

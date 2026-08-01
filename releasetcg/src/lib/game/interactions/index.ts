@@ -15,3 +15,5 @@ export * from "./processPendingInteraction";
 export * from "./factories";
 
 export * from "./processBooleanChoiceRequest";
+
+export * from "./hasPendingInteractions";

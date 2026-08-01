@@ -4,7 +4,7 @@ export * from "./BoardPosition";
 export * from "./BoardState";
 export * from "./CardDefinition";
 export * from "./CardInstance";
-export * from "./GamePhase";
+export * from "./TurnPhase";
 export * from "./GameState";
 export * from "./GateStack";
 export * from "./GateZone";

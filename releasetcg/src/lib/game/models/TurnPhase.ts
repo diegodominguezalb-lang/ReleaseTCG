@@ -1,6 +1,6 @@
-export enum GamePhase {
+export enum TurnPhase {
+    Instant = "instant",
     Action = "action",
-    Response = "response",
     Fill = "fill",
     End = "end",
 }

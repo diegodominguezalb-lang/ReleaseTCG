@@ -1,9 +1,22 @@
-import { GamePhase } from "./GamePhase";
+import {
+    TurnPhase,
+} from "@/lib/game/models";
 
 export interface TurnState {
-    turn: number;
 
-    activePlayerId: string;
+    /**
+     * Whose turn is it?
+     */
+    currentPlayerId: string;
 
-    phase: GamePhase;
+    /**
+     * Starts at 1.
+     */
+    turnNumber: number;
+
+    /**
+     * Current phase of the turn.
+     */
+    phase: TurnPhase;
+
 }
