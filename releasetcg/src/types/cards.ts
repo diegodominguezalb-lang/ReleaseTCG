@@ -47,6 +47,7 @@ export type DatabaseCard = {
   trait: string | null;
   effect1: string | null;
   effect2: string | null;
+  abilities: unknown | null;
 
   flavor_text: string | null;
   description: string | null;
