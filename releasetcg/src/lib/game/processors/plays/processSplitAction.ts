@@ -12,6 +12,11 @@ import {
 
 } from "@/lib/game/commands";
 
+import {
+
+    markActionTaken,
+
+} from "@/lib/game/turn";
 
 export function processSplitAction(
 
@@ -21,7 +26,10 @@ export function processSplitAction(
 
 ): void {
 
-
+    markActionTaken(
+        context,
+    );
+    
     for (
 
         let i = 0;

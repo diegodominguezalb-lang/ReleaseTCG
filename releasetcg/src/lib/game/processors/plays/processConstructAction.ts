@@ -18,6 +18,12 @@ import {
 
 } from "@/lib/game/queries";
 
+import {
+
+    markActionTaken,
+
+} from "@/lib/game/turn";
+
 export function processConstructAction(
 
     context: EngineContext,
@@ -26,6 +32,10 @@ export function processConstructAction(
 
 ): void {
 
+    markActionTaken(
+        context,
+    );
+    
     //
     // Create the gate.
     //

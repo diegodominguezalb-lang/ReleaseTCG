@@ -20,6 +20,8 @@ export function createTurnState(
 
         phase: TurnPhase.Instant,
 
+        actionTaken: false,
+
     };
 
 }

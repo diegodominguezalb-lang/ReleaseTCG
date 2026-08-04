@@ -39,16 +39,13 @@ import {
 } from "@/lib/game/processors/processAction";
 
 import {
-    processCommandQueue,
-} from "@/lib/game/processors/processCommandQueue";
-
-import {
     clearEventListeners,
 } from "@/lib/game/events/listeners/EventListenerRegistry";
 
 import {
     registerDefaultEventListeners,
 } from "@/lib/game/events/listeners/registerDefaultEventListeners";
+import { processEngine } from "@/lib/game/engine/processEngine";
 
 export class TestGame {
 
@@ -156,6 +153,8 @@ export class TestGame {
                 currentPlayerId: "P1",
 
                 phase: TurnPhase.Action,
+
+                actionTaken: false,
 
             } satisfies TurnState,
 
@@ -452,7 +451,7 @@ export class TestGame {
 
         }
 
-        processCommandQueue(
+        processEngine(
 
             this.context,
 
@@ -574,7 +573,7 @@ export class TestGame {
 
         );
 
-        processCommandQueue(
+        processEngine(
 
             this.context,
 

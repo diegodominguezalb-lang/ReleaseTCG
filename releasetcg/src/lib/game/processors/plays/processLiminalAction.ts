@@ -10,11 +10,21 @@ import {
     createStartPriorityCommand,
 } from "@/lib/game/commands";
 
+import {
+
+    markActionTaken,
+
+} from "@/lib/game/turn";
+
 export function processLiminalAction(
     context: EngineContext,
     action: LiminalAction,
 ): void {
 
+    markActionTaken(
+        context,
+    );
+    
     //
     // A valid Liminal always has at least one gate.
     //

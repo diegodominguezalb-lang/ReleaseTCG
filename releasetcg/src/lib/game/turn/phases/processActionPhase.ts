@@ -1,20 +1,27 @@
-import {
-    EngineContext,
-} from "@/lib/game/EngineContext";
+import { EngineContext } from "@/lib/game/EngineContext";
+
+import { TurnPhase } from "@/lib/game/models";
 
 export function processActionPhase(
-
     context: EngineContext,
-
 ): void {
 
     //
-    // Wait for the current player
-    // to perform a play.
+    // Stay in Action until
+    // the player submits a play.
     //
-    // The UI will eventually call
-    // advanceTurnState()
-    // after the play resolves.
-    //
+
+    if (
+
+        !context.state.turn.actionTaken
+
+    ) {
+
+        return;
+
+    }
+
+    context.state.turn.phase =
+        TurnPhase.Fill;
 
 }

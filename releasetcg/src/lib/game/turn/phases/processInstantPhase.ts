@@ -1,33 +1,18 @@
-import {
-    EngineContext,
-} from "@/lib/game/EngineContext";
+import { EngineContext } from "@/lib/game/EngineContext";
 
-import {
-    advanceTurnState,
-} from "..";
+import { TurnPhase } from "@/lib/game/models";
 
 export function processInstantPhase(
-
     context: EngineContext,
-
 ): void {
 
     //
-    // TODO
-    //
-    // Draw leader if desired.
-    //
-
-    //
-    // TODO
-    //
-    // Resolve Quick abilities.
+    // TODO:
+    // Draw Leader
+    // Quick effects
     //
 
-    advanceTurnState(
-
-        context,
-
-    );
+    context.state.turn.phase =
+        TurnPhase.Action;
 
 }

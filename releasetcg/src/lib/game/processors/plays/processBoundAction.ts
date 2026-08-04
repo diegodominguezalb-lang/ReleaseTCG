@@ -10,6 +10,12 @@ import {
 
 } from "@/lib/game/commands";
 
+import {
+
+    markActionTaken,
+
+} from "@/lib/game/turn";
+
 export function processBoundAction(
 
     context: EngineContext,
@@ -18,6 +24,10 @@ export function processBoundAction(
 
 ): void {
 
+    markActionTaken(
+        context,
+    );
+    
     //
     // Move first half.
     //

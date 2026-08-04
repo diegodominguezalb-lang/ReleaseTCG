@@ -19,4 +19,9 @@ export interface TurnState {
      */
     phase: TurnPhase;
 
+    /**
+     * Indicates when to switch from Action to Fill Phase
+     */
+    actionTaken: boolean;
+
 }

@@ -6,6 +6,12 @@ import {
     createMoveCardCommand, createStartPriorityCommand,
 } from "../../commands";
 
+import {
+
+    markActionTaken,
+
+} from "@/lib/game/turn";
+
 export function processChainAction(
 
     context: EngineContext,
@@ -13,6 +19,10 @@ export function processChainAction(
     action: ChainAction,
 
 ): void {
+
+    markActionTaken(
+        context,
+    );
 
     for (
 

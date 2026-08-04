@@ -14,11 +14,21 @@ import {
     createStartPriorityCommand,
 } from "../../commands/StartPriorityCommand";
 
+import {
+
+    markActionTaken,
+
+} from "@/lib/game/turn";
+
 export function processBurnAction(
     context: EngineContext,
     action: BurnAction,
 ): void {
 
+    markActionTaken(
+        context,
+    );
+    
     //
     // Queue a move for every played card.
     //

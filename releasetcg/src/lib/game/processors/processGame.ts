@@ -1,10 +1,10 @@
 import {
     EngineContext,
-} from "./EngineContext";
+} from "../EngineContext";
 
 import {
     processTurnPhase,
-} from "./turn";
+} from "../turn";
 
 import {
     hasPendingInteractions,
