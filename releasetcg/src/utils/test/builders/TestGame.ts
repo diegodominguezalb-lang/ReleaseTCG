@@ -18,11 +18,11 @@ import {
 import {
     createTestCardDefinition,
     TestCardDefinitionOptions,
-} from "../factories/createTestCardDefinition";
+} from "./factories/createTestCardDefinition";
 
 import {
     createTestCardInstance,
-} from "../factories/createTestCardInstance";
+} from "./factories/createTestCardInstance";
 
 import { GateReference, LocationReference } from "@/lib/game/refs";
 import { PlayIntent } from "@/lib/game/intents/PlayIntent";
@@ -45,9 +45,14 @@ import {
 import {
     registerDefaultEventListeners,
 } from "@/lib/game/events/listeners/registerDefaultEventListeners";
+
 import { processEngine } from "@/lib/game/engine/processEngine";
 
+type GameListener = () => void;
+
 export class TestGame {
+
+    private readonly listeners = new Set<GameListener>();
 
     public readonly context: EngineContext;
 
@@ -63,28 +68,14 @@ export class TestGame {
 
         registerDefaultEventListeners();
 
-        const leader1 = createTestCardInstance(
-            "leader-p1",
-            "P1",
-        );
-
-        const leader2 = createTestCardInstance(
-            "leader-p2",
-            "P2",
-        );
-
         this.player1 = {
             id: "P1",
-            health: 20,
-            leader: leader1,
-            leaderDrawn: true,
+            health: 10,
         };
 
         this.player2 = {
             id: "P2",
-            health: 20,
-            leader: leader2,
-            leaderDrawn: true,
+            health: 10,
         };
 
         this.state = {
@@ -180,6 +171,32 @@ export class TestGame {
 
         }
 
+    public subscribe(
+        listener: GameListener,
+    ): () => void {
+
+        this.listeners.add(listener);
+
+        return () => {
+            this.listeners.delete(listener);
+        };
+
+    }
+
+    private revision = 0;
+
+    public getRevision(): number {
+        return this.revision;
+    }
+
+    private notify(): void {
+
+        for (const listener of this.listeners) {
+            listener();
+        }
+
+    }
+
     public addHandCard(
         options: TestCardDefinitionOptions & {
 
@@ -208,6 +225,8 @@ export class TestGame {
             playerId,
 
         ).cards.push(card);
+
+        this.notify();
 
         return card;
 
@@ -241,6 +260,8 @@ export class TestGame {
             playerId,
 
         ).cards.push(card);
+
+        this.notify();
 
         return card;
 
@@ -315,6 +336,8 @@ export class TestGame {
 
         gate.stack.cards.unshift(card);
 
+        this.notify();
+
         return card;
 
     }
@@ -332,6 +355,8 @@ export class TestGame {
             );
 
         if (existing) {
+            this.notify();
+
             return;
         }
 
@@ -344,6 +369,8 @@ export class TestGame {
             stack: null,
 
         });
+
+        this.notify();
 
     }
 
@@ -456,6 +483,8 @@ export class TestGame {
             this.context,
 
         );
+
+        this.notify();
 
     }
 
@@ -579,6 +608,8 @@ export class TestGame {
 
         );
 
+        this.notify();
+
     }
 
     public get pendingResolutionCount(): number {
@@ -662,13 +693,13 @@ export class TestGame {
             definition.id
         ] = definition;
 
-        return createTestCardInstance(
+        return createTestCardInstance({
 
-            definition.id,
+            cardId: definition.id,
 
             ownerId,
 
-        );
+        });
 
     }
 
