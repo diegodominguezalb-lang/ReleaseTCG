@@ -66,13 +66,27 @@ export default function HandFan({
         isHovered &&
         draggingCardId === null;
 
+    console.log(
+        "HANDFAN PROPS:",
+        cards.map(card => card.id),
+    );
+    
     function handleDragStart(
         card: PlayableCard,
+        event: React.DragEvent<HTMLDivElement>,
     ) {
 
         setDraggingCardId(
             card.id,
         );
+
+        event.dataTransfer.setData(
+            "application/x-release-tcg-card",
+            card.id,
+        );
+
+        event.dataTransfer.effectAllowed =
+            "move";
 
         onCardDragStart?.(
             card,
@@ -139,9 +153,10 @@ export default function HandFan({
                                 )
                             }
 
-                            onDragStart={() =>
+                            onDragStart={(event) =>
                                 handleDragStart(
                                     card,
+                                    event,
                                 )
                             }
 

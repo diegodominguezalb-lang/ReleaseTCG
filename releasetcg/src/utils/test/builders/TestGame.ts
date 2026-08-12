@@ -13,6 +13,7 @@ import {
     PlayType,
     PriorityState,
     TurnState,
+    CardColor,
 } from "@/lib/game/models";
 
 import {
@@ -79,7 +80,6 @@ export class TestGame {
     ) {
 
         clearEventListeners();
-
         registerDefaultEventListeners();
 
         this.player1 = {
@@ -103,7 +103,45 @@ export class TestGame {
 
             board: {
 
-                gateZones: [],
+                gateZones: [
+
+                    {
+                        side: PlayerSide.Top,
+                        position: 0,
+                        stack: null,
+                    },
+
+                    {
+                        side: PlayerSide.Top,
+                        position: 1,
+                        stack: null,
+                    },
+
+                    {
+                        side: PlayerSide.Top,
+                        position: 2,
+                        stack: null,
+                    },
+
+                    {
+                        side: PlayerSide.Bottom,
+                        position: 0,
+                        stack: null,
+                    },
+
+                    {
+                        side: PlayerSide.Bottom,
+                        position: 1,
+                        stack: null,
+                    },
+
+                    {
+                        side: PlayerSide.Bottom,
+                        position: 2,
+                        stack: null,
+                    },
+
+                ],
 
                 setZones: [],
 
@@ -179,6 +217,36 @@ export class TestGame {
                 {},
             );
 
+        //
+        // Now that context exists, we can
+        // safely create test cards.
+        //
+
+        this.addGateCard({
+
+            side: PlayerSide.Bottom,
+
+            position: 1,
+
+            ownerId: "P1",
+
+            name: "Test Gate",
+
+            power: 1,
+
+            bulk: 1,
+
+            colors: [
+                CardColor.Red,
+                CardColor.Blue,
+            ],
+
+        });
+
+        //
+        // Load real test decks if supplied.
+        //
+
         this.registerTestCardDefinitions();
 
         if (options.player1Deck) {
@@ -188,8 +256,22 @@ export class TestGame {
                 options.player1Deck,
             );
 
-            this.drawStartingHand("P1");
+            //this.drawStartingHand("P1");
+            this.addHandCard({
+                playerId: "P1",
+                name: "Test Burn Card 1",
+                power: 1,
+                bulk: 1,
+                colors: [CardColor.Red],
+            });
 
+            this.addHandCard({
+                playerId: "P1",
+                name: "Test Burn Card 2",
+                power: 2,
+                bulk: 1,
+                colors: [CardColor.Blue],
+            });
         }
 
         if (options.player2Deck) {
@@ -225,6 +307,13 @@ export class TestGame {
     }
 
     private notify(): void {
+
+        this.revision++;
+
+        console.log(
+            "GAME UPDATED:",
+            this.revision,
+        );
 
         for (const listener of this.listeners) {
             listener();
@@ -678,6 +767,42 @@ export class TestGame {
             ),
 
         );
+
+    }
+
+    public card(
+        cardId: string,
+    ): CardInstance | null {
+
+        for (const pile of this.state.piles) {
+
+            const card =
+                pile.cards.find(
+                    card =>
+                        card.id === cardId,
+                );
+
+            if (card) {
+                return card;
+            }
+
+        }
+
+        for (const gate of this.state.board.gateZones) {
+
+            const card =
+                gate.stack?.cards.find(
+                    card =>
+                        card.id === cardId,
+                );
+
+            if (card) {
+                return card;
+            }
+
+        }
+
+        return null;
 
     }
 

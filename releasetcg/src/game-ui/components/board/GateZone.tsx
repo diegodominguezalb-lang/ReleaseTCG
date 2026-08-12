@@ -1,6 +1,24 @@
 "use client";
 
-import { BOARD } from "@/game-ui/constants/boardMetrics";
+import {
+    DragEvent,
+} from "react";
+
+import {
+    useGame,
+} from "../../providers/GameProvider";
+
+import {
+    useGameRevision,
+} from "../../hooks/useGameRevision";
+
+import GameCard from "../cards/GameCard";
+
+import { toPlayableCard } from "../../utils/toPlayableCard";
+
+import {
+    PlayerSide,
+} from "@/lib/game/models";
 
 interface Props {
 
@@ -18,19 +36,131 @@ export default function GateZone({
 
 }: Props) {
 
+    const {
+        engine,
+    } = useGame();
+
+    useGameRevision();
+
+    const side =
+        row === 0
+            ? PlayerSide.Top
+            : PlayerSide.Bottom;
+
+    const gate =
+        engine.state.board.gateZones.find(
+            gate =>
+                gate.side === side &&
+                gate.position === column,
+        );
+
+    const topCard =
+        gate?.stack?.cards[0];
+
+    const cardDefinition =
+        topCard
+            ? engine.cardDefinition(
+                topCard,
+            )
+            : undefined;
+    
+    const playableCard =
+        topCard && cardDefinition
+            ? toPlayableCard(
+                topCard,
+                cardDefinition,
+            )
+            : undefined;
+
+    function handleDragOver(
+        event: DragEvent<HTMLDivElement>,
+    ) {
+
+        event.preventDefault();
+
+        event.dataTransfer.dropEffect =
+            "move";
+
+    }
+
+    function handleDrop(
+        event: DragEvent<HTMLDivElement>,
+    ) {
+
+        event.preventDefault();
+
+        console.log("1. DROP FIRED");
+
+        const cardId =
+            event.dataTransfer.getData(
+                "application/x-release-tcg-card",
+            );
+
+        console.log(
+            "2. CARD ID:",
+            cardId,
+        );
+
+        if (!cardId) {
+            return;
+        }
+
+        const card =
+            engine.card(cardId);
+
+        console.log(
+            "3. CARD:",
+            card,
+        );
+
+        if (!card) {
+            return;
+        }
+
+        console.log(
+            "4. CALLING BURN",
+        );
+
+        engine.burn(
+            card,
+            side,
+            column,
+        );
+
+        console.log(
+            "5. BURN FINISHED",
+        );
+    }
+
     return (
 
         <div
+            onDragOver={
+                handleDragOver
+            }
 
-            style={{
-                height: BOARD.gateHeight,
-            }}
+            onDrop={
+                handleDrop
+            }
 
-            className="aspect-[5/7] rounded-xl border bg-muted flex items-center justify-center"
-
+            className="h-[25vh] aspect-[5/7] overflow-hidden rounded-xl border bg-muted transition hover:bg-muted/80"
         >
 
-            Gate {row},{column}
+            {
+                playableCard
+                    ? (
+                        <GameCard
+                            card={playableCard}
+                        />
+                    )
+                    : (
+                        <div
+                            className="flex h-full items-center justify-center text-sm text-muted-foreground"
+                        >
+                            Empty Gate
+                        </div>
+                    )
+            }
 
         </div>
 

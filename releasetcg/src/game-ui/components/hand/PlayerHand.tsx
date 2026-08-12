@@ -1,12 +1,12 @@
 "use client";
 
 import {
-    useMemo,
-} from "react";
-
-import {
     useGame,
 } from "../../providers/GameProvider";
+
+import {
+    useGameRevision,
+} from "../../hooks/useGameRevision";
 
 import HandFan from "./HandFan";
 
@@ -20,28 +20,34 @@ export default function PlayerHand() {
         engine,
     } = useGame();
 
-    const cards = useMemo(
+    const revision =
+        useGameRevision();
 
-        () =>
+    console.log(
+        "PLAYER HAND REVISION:",
+        revision,
+    );
 
-            engine
-                .hand("P1")
-                .map(card => {
+    const cards =
+        engine
+            .hand("P1")
+            .map(card => {
 
-                    const definition =
-                        engine.cardDefinition(
-                            card,
-                        );
-
-                    return toPlayableCard(
+                const definition =
+                    engine.cardDefinition(
                         card,
-                        definition,
                     );
 
-                }),
+                return toPlayableCard(
+                    card,
+                    definition,
+                );
 
-        [engine],
+            });
 
+    console.log(
+        "ENGINE HAND:",
+        cards.map(card => card.id),
     );
 
     return (
@@ -52,5 +58,4 @@ export default function PlayerHand() {
         />
 
     );
-
 }
